@@ -1,0 +1,12 @@
+#ifndef STWINCHLIB_GLOBAL_H
+#define STWINCHLIB_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(STWINCHLIB_LIBRARY)
+#  define STWINCHLIB_EXPORT Q_DECL_EXPORT
+#else
+#  define STWINCHLIB_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // STWINCHLIB_GLOBAL_H
