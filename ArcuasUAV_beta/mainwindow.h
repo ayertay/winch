@@ -60,6 +60,16 @@ private slots:
 
     void on_BtnWinch_LOAD_UP_clicked();
 
+    void on_BtnWinch_LOCK_clicked();
+
+    void on_BtnWinch_UNLOCK_clicked();
+
+    void on_BtnWinch_LOAD_UP_LOCK_clicked();
+
+    void on_BtnWinch_HOLD_clicked();
+
+    void on_BtnWinch_HOLD_LINE_clicked();
+
 private:
     Ui::MainWindow *ui;
     CoreUAV mCore;

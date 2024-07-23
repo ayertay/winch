@@ -65,6 +65,10 @@ signals:
 
     void signal_SC_AutoTest();
 
+    void signal_WINCH_DELIVER(float pos, float speed);
+    void signal_WinchLoadUPandLock();
+    void signal_WINCH_LOCK();
+
 public slots:
     int showUAVStatus(char*,int);
 };

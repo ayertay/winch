@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CoreUAV_t {
-    QByteArrayData data[54];
-    char stringdata0[570];
+    QByteArrayData data[66];
+    char stringdata0[759];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -75,17 +75,29 @@ QT_MOC_LITERAL(39, 420, 8), // "distance"
 QT_MOC_LITERAL(40, 429, 12), // "WinchRetract"
 QT_MOC_LITERAL(41, 442, 9), // "WinchLoad"
 QT_MOC_LITERAL(42, 452, 11), // "WinchLoadUP"
-QT_MOC_LITERAL(43, 464, 16), // "SC_StartAutoTest"
-QT_MOC_LITERAL(44, 481, 15), // "SC_StopAutoTest"
-QT_MOC_LITERAL(45, 497, 12), // "On_SC_SetPos"
-QT_MOC_LITERAL(46, 510, 2), // "ID"
-QT_MOC_LITERAL(47, 513, 8), // "Position"
-QT_MOC_LITERAL(48, 522, 4), // "Time"
-QT_MOC_LITERAL(49, 527, 5), // "Speed"
-QT_MOC_LITERAL(50, 533, 11), // "time_update"
-QT_MOC_LITERAL(51, 545, 9), // "On_SubMsg"
-QT_MOC_LITERAL(52, 555, 6), // "sTopic"
-QT_MOC_LITERAL(53, 562, 7) // "message"
+QT_MOC_LITERAL(43, 464, 18), // "WinchLoadUPandLock"
+QT_MOC_LITERAL(44, 483, 9), // "WinchLock"
+QT_MOC_LITERAL(45, 493, 11), // "WinchUnlock"
+QT_MOC_LITERAL(46, 505, 13), // "WINCH_RELAXED"
+QT_MOC_LITERAL(47, 519, 29), // "WINCH_RELATIVE_LENGTH_CONTROL"
+QT_MOC_LITERAL(48, 549, 18), // "WINCH_RATE_CONTROL"
+QT_MOC_LITERAL(49, 568, 10), // "WINCH_LOCK"
+QT_MOC_LITERAL(50, 579, 13), // "WINCH_DELIVER"
+QT_MOC_LITERAL(51, 593, 10), // "WINCH_HOLD"
+QT_MOC_LITERAL(52, 604, 13), // "WINCH_RETRACT"
+QT_MOC_LITERAL(53, 618, 15), // "WINCH_LOAD_LINE"
+QT_MOC_LITERAL(54, 634, 18), // "WINCH_ABANDON_LINE"
+QT_MOC_LITERAL(55, 653, 16), // "SC_StartAutoTest"
+QT_MOC_LITERAL(56, 670, 15), // "SC_StopAutoTest"
+QT_MOC_LITERAL(57, 686, 12), // "On_SC_SetPos"
+QT_MOC_LITERAL(58, 699, 2), // "ID"
+QT_MOC_LITERAL(59, 702, 8), // "Position"
+QT_MOC_LITERAL(60, 711, 4), // "Time"
+QT_MOC_LITERAL(61, 716, 5), // "Speed"
+QT_MOC_LITERAL(62, 722, 11), // "time_update"
+QT_MOC_LITERAL(63, 734, 9), // "On_SubMsg"
+QT_MOC_LITERAL(64, 744, 6), // "sTopic"
+QT_MOC_LITERAL(65, 751, 7) // "message"
 
     },
     "CoreUAV\0SendSignalPostRequest\0\0char*\0"
@@ -100,10 +112,15 @@ QT_MOC_LITERAL(53, 562, 7) // "message"
     "StopWincTest\0WinchDataDump\0i_onoff\0"
     "WinchReset\0WinchDelivery\0speed\0"
     "WinchDeliveryEx\0distance\0WinchRetract\0"
-    "WinchLoad\0WinchLoadUP\0SC_StartAutoTest\0"
-    "SC_StopAutoTest\0On_SC_SetPos\0ID\0"
-    "Position\0Time\0Speed\0time_update\0"
-    "On_SubMsg\0sTopic\0message"
+    "WinchLoad\0WinchLoadUP\0WinchLoadUPandLock\0"
+    "WinchLock\0WinchUnlock\0WINCH_RELAXED\0"
+    "WINCH_RELATIVE_LENGTH_CONTROL\0"
+    "WINCH_RATE_CONTROL\0WINCH_LOCK\0"
+    "WINCH_DELIVER\0WINCH_HOLD\0WINCH_RETRACT\0"
+    "WINCH_LOAD_LINE\0WINCH_ABANDON_LINE\0"
+    "SC_StartAutoTest\0SC_StopAutoTest\0"
+    "On_SC_SetPos\0ID\0Position\0Time\0Speed\0"
+    "time_update\0On_SubMsg\0sTopic\0message"
 };
 #undef QT_MOC_LITERAL
 
@@ -113,7 +130,7 @@ static const uint qt_meta_data_CoreUAV[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      26,   14, // methods
+      38,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -121,34 +138,46 @@ static const uint qt_meta_data_CoreUAV[] = {
        9,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    4,  144,    2, 0x06 /* Public */,
-       8,    0,  153,    2, 0x06 /* Public */,
-       9,    1,  154,    2, 0x06 /* Public */,
-      11,    0,  157,    2, 0x06 /* Public */,
-      12,    0,  158,    2, 0x06 /* Public */,
-      13,    4,  159,    2, 0x06 /* Public */,
-      18,    1,  168,    2, 0x06 /* Public */,
-      19,    2,  171,    2, 0x06 /* Public */,
-      22,    0,  176,    2, 0x06 /* Public */,
+       1,    4,  204,    2, 0x06 /* Public */,
+       8,    0,  213,    2, 0x06 /* Public */,
+       9,    1,  214,    2, 0x06 /* Public */,
+      11,    0,  217,    2, 0x06 /* Public */,
+      12,    0,  218,    2, 0x06 /* Public */,
+      13,    4,  219,    2, 0x06 /* Public */,
+      18,    1,  228,    2, 0x06 /* Public */,
+      19,    2,  231,    2, 0x06 /* Public */,
+      22,    0,  236,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      23,    2,  177,    2, 0x0a /* Public */,
-      25,    1,  182,    2, 0x0a /* Public */,
-      26,    5,  185,    2, 0x0a /* Public */,
-      31,    0,  196,    2, 0x0a /* Public */,
-      32,    0,  197,    2, 0x0a /* Public */,
-      33,    1,  198,    2, 0x0a /* Public */,
-      35,    0,  201,    2, 0x0a /* Public */,
-      36,    1,  202,    2, 0x0a /* Public */,
-      38,    2,  205,    2, 0x0a /* Public */,
-      40,    1,  210,    2, 0x0a /* Public */,
-      41,    0,  213,    2, 0x0a /* Public */,
-      42,    0,  214,    2, 0x0a /* Public */,
-      43,    0,  215,    2, 0x0a /* Public */,
-      44,    0,  216,    2, 0x0a /* Public */,
-      45,    4,  217,    2, 0x0a /* Public */,
-      50,    0,  226,    2, 0x0a /* Public */,
-      51,    2,  227,    2, 0x0a /* Public */,
+      23,    2,  237,    2, 0x0a /* Public */,
+      25,    1,  242,    2, 0x0a /* Public */,
+      26,    5,  245,    2, 0x0a /* Public */,
+      31,    0,  256,    2, 0x0a /* Public */,
+      32,    0,  257,    2, 0x0a /* Public */,
+      33,    1,  258,    2, 0x0a /* Public */,
+      35,    0,  261,    2, 0x0a /* Public */,
+      36,    1,  262,    2, 0x0a /* Public */,
+      38,    2,  265,    2, 0x0a /* Public */,
+      40,    1,  270,    2, 0x0a /* Public */,
+      41,    0,  273,    2, 0x0a /* Public */,
+      42,    0,  274,    2, 0x0a /* Public */,
+      43,    0,  275,    2, 0x0a /* Public */,
+      44,    0,  276,    2, 0x0a /* Public */,
+      45,    0,  277,    2, 0x0a /* Public */,
+      46,    0,  278,    2, 0x0a /* Public */,
+      47,    2,  279,    2, 0x0a /* Public */,
+      48,    1,  284,    2, 0x0a /* Public */,
+      49,    0,  287,    2, 0x0a /* Public */,
+      50,    2,  288,    2, 0x0a /* Public */,
+      51,    0,  293,    2, 0x0a /* Public */,
+      52,    1,  294,    2, 0x0a /* Public */,
+      53,    0,  297,    2, 0x0a /* Public */,
+      54,    0,  298,    2, 0x0a /* Public */,
+      55,    0,  299,    2, 0x0a /* Public */,
+      56,    0,  300,    2, 0x0a /* Public */,
+      57,    4,  301,    2, 0x0a /* Public */,
+      62,    0,  310,    2, 0x0a /* Public */,
+      63,    2,  311,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Int, 0x80000000 | 3, 0x80000000 | 3, 0x80000000 | 3, QMetaType::Int,    4,    5,    6,    7,
@@ -169,16 +198,28 @@ static const uint qt_meta_data_CoreUAV[] = {
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,   34,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   37,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,   37,   39,
-    QMetaType::Void, QMetaType::Int,   37,
+    QMetaType::Void, QMetaType::Float,   37,
+    QMetaType::Void, QMetaType::Float, QMetaType::Float,   39,   37,
+    QMetaType::Void, QMetaType::Float,   37,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   46,   47,   48,   49,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString, QMetaType::QString,   52,   53,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Float, QMetaType::Float,   39,   37,
+    QMetaType::Void, QMetaType::Float,   37,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Float, QMetaType::Float,   39,   37,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Float,   37,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   58,   59,   60,   61,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString,   64,   65,
 
        0        // eod
 };
@@ -208,16 +249,28 @@ void CoreUAV::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 13: _t->StopWincTest(); break;
         case 14: _t->WinchDataDump((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 15: _t->WinchReset(); break;
-        case 16: _t->WinchDelivery((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 17: _t->WinchDeliveryEx((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 18: _t->WinchRetract((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 16: _t->WinchDelivery((*reinterpret_cast< float(*)>(_a[1]))); break;
+        case 17: _t->WinchDeliveryEx((*reinterpret_cast< float(*)>(_a[1])),(*reinterpret_cast< float(*)>(_a[2]))); break;
+        case 18: _t->WinchRetract((*reinterpret_cast< float(*)>(_a[1]))); break;
         case 19: _t->WinchLoad(); break;
         case 20: _t->WinchLoadUP(); break;
-        case 21: _t->SC_StartAutoTest(); break;
-        case 22: _t->SC_StopAutoTest(); break;
-        case 23: _t->On_SC_SetPos((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
-        case 24: _t->time_update(); break;
-        case 25: _t->On_SubMsg((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 21: _t->WinchLoadUPandLock(); break;
+        case 22: _t->WinchLock(); break;
+        case 23: _t->WinchUnlock(); break;
+        case 24: _t->WINCH_RELAXED(); break;
+        case 25: _t->WINCH_RELATIVE_LENGTH_CONTROL((*reinterpret_cast< float(*)>(_a[1])),(*reinterpret_cast< float(*)>(_a[2]))); break;
+        case 26: _t->WINCH_RATE_CONTROL((*reinterpret_cast< float(*)>(_a[1]))); break;
+        case 27: _t->WINCH_LOCK(); break;
+        case 28: _t->WINCH_DELIVER((*reinterpret_cast< float(*)>(_a[1])),(*reinterpret_cast< float(*)>(_a[2]))); break;
+        case 29: _t->WINCH_HOLD(); break;
+        case 30: _t->WINCH_RETRACT((*reinterpret_cast< float(*)>(_a[1]))); break;
+        case 31: _t->WINCH_LOAD_LINE(); break;
+        case 32: _t->WINCH_ABANDON_LINE(); break;
+        case 33: _t->SC_StartAutoTest(); break;
+        case 34: _t->SC_StopAutoTest(); break;
+        case 35: _t->On_SC_SetPos((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
+        case 36: _t->time_update(); break;
+        case 37: _t->On_SubMsg((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -317,13 +370,13 @@ int CoreUAV::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 26)
+        if (_id < 38)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 26;
+        _id -= 38;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 26)
+        if (_id < 38)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 26;
+        _id -= 38;
     }
     return _id;
 }

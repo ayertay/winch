@@ -14,8 +14,14 @@ private:
     virtual void run(); //任务处理线程
 public:
     bool  is_Work;
+
+    struct timeval tv_Begin;
+    __suseconds_t t_outPWM_H;
+    __suseconds_t t_outPWM_val;
     //====================
     void CheckPWM();
+    void SetPWM(int pwmVal);
+    void MakePWM();
 signals:
     void signal_ShowCurrentIO(int io_idx,int v);
 };

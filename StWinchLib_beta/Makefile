@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = clang
 CXX           = clang++
-DEFINES       = -DSTWINCHLIB_LIBRARY -DQT_NO_DEBUG -DQT_SERIALPORT_LIB -DQT_MQTT_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
+DEFINES       = -DSTWINCHLIB_LIBRARY -DQT_NO_DEBUG -DQT_MQTT_LIB -DQT_SERIALPORT_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -O2 -std=gnu++1z -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang
+INCPATH       = -I. -I/home/pi/APP/qtmqtt/include -I/home/pi/APP/qtmqtt/include/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I. -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang
 QMAKE         = /usr/lib/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -37,10 +37,10 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = StWinchLib1.0.0
-DISTDIR = /home/uav/APP/qtmqtt/StWinchLib/.tmp/StWinchLib1.0.0
+DISTDIR = /home/uav/APP/qtmqtt/StWinchLib_beta/.tmp/StWinchLib1.0.0
 LINK          = clang++
 LFLAGS        = -ccc-gcc-name g++ -shared -Wl,-soname,libStWinchLib.so.1
-LIBS          = $(SUBLIBS) -lwiringPi -L. -lgpiod /usr/lib/arm-linux-gnueabihf/libQt5SerialPort.so /usr/lib/arm-linux-gnueabihf/libQt5Mqtt.so /usr/lib/arm-linux-gnueabihf/libQt5Network.so /usr/lib/arm-linux-gnueabihf/libQt5Core.so -lpthread -latomic   
+LIBS          = $(SUBLIBS) -lwiringPi -L. -lgpiod /home/pi/APP/qtmqtt/lib/libQt5Mqtt.so /usr/lib/arm-linux-gnueabihf/libQt5SerialPort.so /usr/lib/arm-linux-gnueabihf/libQt5Network.so /usr/lib/arm-linux-gnueabihf/libQt5Core.so -lpthread -latomic   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -81,95 +81,15 @@ OBJECTS       = PWMthreak.o \
 		moc_cybergear.o \
 		moc_mymqtt.o \
 		moc_workthread.o
-DIST          = /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_pre.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/common/unix.conf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/common/linux.conf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/common/sanitize.conf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/common/gcc-base.conf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/common/gcc-base-unix.conf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/common/clang.conf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/qconfig.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_accessibility_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_bootstrap_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_concurrent.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_concurrent_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_core.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_core_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_dbus.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_dbus_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_devicediscovery_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_edid_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_egl_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_eglfs_kms_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_eglfsdeviceintegration_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_eventdispatcher_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_fb_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_fontdatabase_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_gui.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_gui_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_input_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_kms_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_linuxaccessibility_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_mqtt.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_mqtt_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_network.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_network_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_opengl.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_opengl_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_openglextensions.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_openglextensions_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_platformcompositor_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_printsupport.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_qml.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_qmlmodels.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_qmltest.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_qmlworkerscript.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_quick.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_quickwidgets.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_serialport.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_service_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_sql.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_sql_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_testlib.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_testlib_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_theme_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_vulkan_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_widgets.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_widgets_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xkbcommon_support_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xml.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xml_private.pri \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/qt_functions.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/qt_config.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang/qmake.conf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_post.prf \
+DIST          = ../mkspecs/modules/qt_lib_mqtt.pri \
 		.qmake.stash \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/exclusive_builds.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/toolchain.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/default_pre.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/resolve_config.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/default_post.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/qtquickcompiler.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/warn_on.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/qt.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/resources_functions.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/resources.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/moc.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/unix/thread.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/qmake_use.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/file_copies.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/testcase_targets.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/exceptions.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/yacc.prf \
-		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/lex.prf \
 		StWinchLib.pro PWMthread.h \
 		StWinchLib_global.h \
 		chook_heltec.h \
 		coreuav.h \
 		ctomotorserial.h \
 		cybergear.h \
+		global.h \
 		mymqtt.h \
 		stwinchlib.h \
 		workthread.h PWMthreak.cpp \
@@ -208,7 +128,7 @@ libStWinchLib.a:  $(OBJECTS) $(OBJCOMP)
 	-$(DEL_FILE) $(TARGETA) 
 	$(AR) $(TARGETA) $(OBJECTS)
 
-Makefile: StWinchLib.pro /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang/qmake.conf /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_pre.prf \
+Makefile: StWinchLib.pro ../.qmake.cache /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang/qmake.conf /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/common/unix.conf \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/common/linux.conf \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/common/sanitize.conf \
@@ -268,10 +188,14 @@ Makefile: StWinchLib.pro /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang/qm
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xkbcommon_support_private.pri \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xml.pri \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xml_private.pri \
+		/home/pi/APP/qtmqtt/mkspecs/modules-inst/qt_lib_mqtt.pri \
+		/home/pi/APP/qtmqtt/mkspecs/modules-inst/qt_lib_mqtt_private.pri \
+		../mkspecs/modules/qt_lib_mqtt.pri \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/qt_functions.prf \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang/qmake.conf \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_post.prf \
+		../.qmake.cache \
 		.qmake.stash \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/toolchain.prf \
@@ -353,10 +277,14 @@ Makefile: StWinchLib.pro /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang/qm
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xkbcommon_support_private.pri:
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xml.pri:
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/modules/qt_lib_xml_private.pri:
+/home/pi/APP/qtmqtt/mkspecs/modules-inst/qt_lib_mqtt.pri:
+/home/pi/APP/qtmqtt/mkspecs/modules-inst/qt_lib_mqtt_private.pri:
+../mkspecs/modules/qt_lib_mqtt.pri:
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/qt_functions.prf:
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang/qmake.conf:
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/spec_post.prf:
+../.qmake.cache:
 .qmake.stash:
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/toolchain.prf:
@@ -392,7 +320,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/arm-linux-gnueabihf/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents PWMthread.h StWinchLib_global.h chook_heltec.h coreuav.h ctomotorserial.h cybergear.h mymqtt.h stwinchlib.h workthread.h $(DISTDIR)/
+	$(COPY_FILE) --parents PWMthread.h StWinchLib_global.h chook_heltec.h coreuav.h ctomotorserial.h cybergear.h global.h mymqtt.h stwinchlib.h workthread.h $(DISTDIR)/
 	$(COPY_FILE) --parents PWMthreak.cpp chook_heltec.cpp coreuav.cpp ctomotorserial.cpp cybergear.cpp mymqtt.cpp stwinchlib.cpp workthreak.cpp $(DISTDIR)/
 
 
@@ -432,12 +360,12 @@ compiler_moc_header_clean:
 moc_PWMthread.cpp: PWMthread.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include PWMthread.h -o moc_PWMthread.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib_beta/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib_beta -I/home/pi/APP/qtmqtt/include -I/home/pi/APP/qtmqtt/include/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include PWMthread.h -o moc_PWMthread.cpp
 
 moc_chook_heltec.cpp: chook_heltec.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include chook_heltec.h -o moc_chook_heltec.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib_beta/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib_beta -I/home/pi/APP/qtmqtt/include -I/home/pi/APP/qtmqtt/include/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include chook_heltec.h -o moc_chook_heltec.cpp
 
 moc_coreuav.cpp: coreuav.h \
 		cybergear.h \
@@ -446,6 +374,29 @@ moc_coreuav.cpp: coreuav.h \
 		workthread.h \
 		PWMthread.h \
 		mymqtt.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/QMqttClient \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscriptionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscriptionproperties.h \
 		ScsServLib/SCServo.h \
 		ScsServLib/SMSBL.h \
 		ScsServLib/SCSerial.h \
@@ -456,28 +407,51 @@ moc_coreuav.cpp: coreuav.h \
 		ScsServLib/SMS_STS.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include coreuav.h -o moc_coreuav.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib_beta/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib_beta -I/home/pi/APP/qtmqtt/include -I/home/pi/APP/qtmqtt/include/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include coreuav.h -o moc_coreuav.cpp
 
 moc_ctomotorserial.cpp: ctomotorserial.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include ctomotorserial.h -o moc_ctomotorserial.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib_beta/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib_beta -I/home/pi/APP/qtmqtt/include -I/home/pi/APP/qtmqtt/include/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include ctomotorserial.h -o moc_ctomotorserial.cpp
 
 moc_cybergear.cpp: cybergear.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include cybergear.h -o moc_cybergear.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib_beta/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib_beta -I/home/pi/APP/qtmqtt/include -I/home/pi/APP/qtmqtt/include/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include cybergear.h -o moc_cybergear.cpp
 
 moc_mymqtt.cpp: mymqtt.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/QMqttClient \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscriptionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscriptionproperties.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include mymqtt.h -o moc_mymqtt.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib_beta/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib_beta -I/home/pi/APP/qtmqtt/include -I/home/pi/APP/qtmqtt/include/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include mymqtt.h -o moc_mymqtt.cpp
 
 moc_workthread.cpp: workthread.h \
 		cybergear.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include workthread.h -o moc_workthread.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/uav/APP/qtmqtt/StWinchLib_beta/moc_predefs.h -I/usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-clang -I/home/uav/APP/qtmqtt/StWinchLib_beta -I/home/pi/APP/qtmqtt/include -I/home/pi/APP/qtmqtt/include/QtMqtt -I/usr/include/arm-linux-gnueabihf/qt5 -I/usr/include/arm-linux-gnueabihf/qt5/QtSerialPort -I/usr/include/arm-linux-gnueabihf/qt5/QtNetwork -I/usr/include/arm-linux-gnueabihf/qt5/QtCore -I/usr/include/c++/12 -I/usr/include/arm-linux-gnueabihf/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/llvm-14/lib/clang/14.0.6/include -I/usr/local/include -I/usr/include/arm-linux-gnueabihf -I/usr/include workthread.h -o moc_workthread.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -506,6 +480,29 @@ coreuav.o: coreuav.cpp coreuav.h \
 		workthread.h \
 		PWMthread.h \
 		mymqtt.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/QMqttClient \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscriptionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscriptionproperties.h \
 		ScsServLib/SCServo.h \
 		ScsServLib/SMSBL.h \
 		ScsServLib/SCSerial.h \
@@ -513,7 +510,8 @@ coreuav.o: coreuav.cpp coreuav.h \
 		ScsServLib/INST.h \
 		ScsServLib/SCSCL.h \
 		ScsServLib/SMSCL.h \
-		ScsServLib/SMS_STS.h
+		ScsServLib/SMS_STS.h \
+		global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o coreuav.o coreuav.cpp
 
 ctomotorserial.o: ctomotorserial.cpp ctomotorserial.h
@@ -522,7 +520,30 @@ ctomotorserial.o: ctomotorserial.cpp ctomotorserial.h
 cybergear.o: cybergear.cpp cybergear.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cybergear.o cybergear.cpp
 
-mymqtt.o: mymqtt.cpp mymqtt.h
+mymqtt.o: mymqtt.cpp mymqtt.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/QMqttClient \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscriptionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscriptionproperties.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mymqtt.o mymqtt.cpp
 
 stwinchlib.o: stwinchlib.cpp stwinchlib.h \
@@ -534,6 +555,29 @@ stwinchlib.o: stwinchlib.cpp stwinchlib.h \
 		workthread.h \
 		PWMthread.h \
 		mymqtt.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/QMqttClient \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttclient.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttglobal.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttauthenticationproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttype.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttconnectionproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttpublishproperties.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscription.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttmessage.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicname.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqtttopicfilter.h \
+		/home/pi/APP/qtmqtt/include/QtMqtt/qmqttsubscriptionproperties.h \
+		/home/pi/APP/qtmqtt/src/mqtt/qmqttsubscriptionproperties.h \
 		ScsServLib/SCServo.h \
 		ScsServLib/SMSBL.h \
 		ScsServLib/SCSerial.h \
@@ -545,7 +589,8 @@ stwinchlib.o: stwinchlib.cpp stwinchlib.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o stwinchlib.o stwinchlib.cpp
 
 workthreak.o: workthreak.cpp workthread.h \
-		cybergear.h
+		cybergear.h \
+		global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o workthreak.o workthreak.cpp
 
 moc_PWMthread.o: moc_PWMthread.cpp 

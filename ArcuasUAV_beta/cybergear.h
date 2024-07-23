@@ -18,7 +18,7 @@ union IntFloat
     float f;
 };
 
-enum MOTOR_MODE{MODE_NORM,MODE_RESET,MODE_DELIVERY,MODE_RETRACT};
+enum MOTOR_MODE{MODE_NORM,MODE_RESET,MODE_DELIVERY,MODE_RETRACT,MODE_STOP,MODE_HOLD_LINE};
 
 class CyberGear : public QObject
 {
@@ -42,6 +42,9 @@ public:
     int   g_Ground_check_Cnt;
     int   m_retract_cnt;
     int   m_DataAutoDump;
+    int   m_MotorStop;
+
+    float   m_tie_length;
 
     void Init();
     void motor_can_tx(int mode, int data2);
@@ -52,7 +55,7 @@ public:
     int Motor_SetMode(int mode);
     int Motor_Enable();
     int Motor_Disenable();
-    int Motor_Speed(int spd);
+    int Motor_Speed(float spd);
     int Motor_limit_spd(float spd);
     int Motor_limit_cur(float cur);
     int Motor_limit_torque(float cur);
@@ -63,6 +66,7 @@ public:
     int  Motor_Read_mechPos();
     void motor_Decode();
     void Motor_Mode(int mode);
+    int  Motor_Read_Mode();
 
     float Motor_GetPos();
     float Motor_GetTorque();

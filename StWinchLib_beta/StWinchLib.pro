@@ -29,6 +29,7 @@ HEADERS += \
     coreuav.h \
     ctomotorserial.h \
     cybergear.h \
+    global.h \
     mymqtt.h \
     stwinchlib.h \
     workthread.h

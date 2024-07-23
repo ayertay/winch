@@ -27,6 +27,20 @@ extern "C"
     STWINCHLIB_EXPORT float WinchGetPWMDuty();
     STWINCHLIB_EXPORT float WinchGetPWMPeriod();
 
+    //the new API is add at 2024-06-19
+    STWINCHLIB_EXPORT void WINCH_RELAXED();
+    STWINCHLIB_EXPORT void WINCH_RELATIVE_LENGTH_CONTROL(float distance, float speed);
+    STWINCHLIB_EXPORT void WINCH_RATE_CONTROL(float speed);
+    STWINCHLIB_EXPORT void WINCH_LOCK();
+    STWINCHLIB_EXPORT void WINCH_DELIVER(float distance, float speed);
+    STWINCHLIB_EXPORT void WINCH_HOLD();
+    STWINCHLIB_EXPORT void WINCH_RETRACT(float speed);
+    STWINCHLIB_EXPORT void WINCH_LOAD_LINE();
+    STWINCHLIB_EXPORT void WINCH_ABANDON_LINE();
+
+    //the extra API
+    STWINCHLIB_EXPORT void WINCH_LATCH_LOCK();
+    STWINCHLIB_EXPORT void WINCH_LATCH_UNLOCK();
 }
 
 #endif // STWINCHLIB_H

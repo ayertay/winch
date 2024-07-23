@@ -24,9 +24,9 @@ int add(int a, int b)
     return a+b;
 }
 
-int WinchCoreRun(int ID)
+int WinchCoreRun(int motor_id)
 {
-    mCore.init(ID);
+    mCore.init(motor_id);
     mCore.run();
     return 0;
 }
@@ -87,4 +87,49 @@ float WinchGetPWMPeriod()
 {
     float fRet=pwm_period;
     return fRet;
+}
+
+
+//==========================
+//the new API is as fllow
+
+void WINCH_RELAXED()
+{
+    mCore.WinchLoad();
+}
+
+void WINCH_RELATIVE_LENGTH_CONTROL()
+{
+    ;
+}
+
+void WINCH_RATE_CONTROL()
+{
+    ;
+}
+
+void WINCH_LOCK()
+{
+    ;
+}
+
+void WINCH_DELIVER(int spd)
+{
+    //Delivery
+    mCore.WinchDelivery(spd);
+}
+
+void WINCH_HOLD()
+{
+    ;
+}
+
+void WINCH_RETRACT()
+{
+    ;
+}
+
+void WINCH_HOLD_LINE()
+{
+    ;
 }

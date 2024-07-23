@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_WorkThread_t {
-    QByteArrayData data[17];
-    char stringdata0[226];
+    QByteArrayData data[22];
+    char stringdata0[301];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -48,7 +48,12 @@ QT_MOC_LITERAL(12, 138, 26), // "signal_ShowCurrentWinchPos"
 QT_MOC_LITERAL(13, 165, 20), // "signal_ShowCurrentIO"
 QT_MOC_LITERAL(14, 186, 6), // "io_idx"
 QT_MOC_LITERAL(15, 193, 18), // "signal_SC_AutoTest"
-QT_MOC_LITERAL(16, 212, 13) // "showUAVStatus"
+QT_MOC_LITERAL(16, 212, 20), // "signal_WINCH_DELIVER"
+QT_MOC_LITERAL(17, 233, 3), // "pos"
+QT_MOC_LITERAL(18, 237, 5), // "speed"
+QT_MOC_LITERAL(19, 243, 25), // "signal_WinchLoadUPandLock"
+QT_MOC_LITERAL(20, 269, 17), // "signal_WINCH_LOCK"
+QT_MOC_LITERAL(21, 287, 13) // "showUAVStatus"
 
     },
     "WorkThread\0SignalgetStatusReady\0\0char*\0"
@@ -57,7 +62,9 @@ QT_MOC_LITERAL(16, 212, 13) // "showUAVStatus"
     "signal_ShowCurrentSCPos\0"
     "signal_ShowCurrentWinchPos\0"
     "signal_ShowCurrentIO\0io_idx\0"
-    "signal_SC_AutoTest\0showUAVStatus"
+    "signal_SC_AutoTest\0signal_WINCH_DELIVER\0"
+    "pos\0speed\0signal_WinchLoadUPandLock\0"
+    "signal_WINCH_LOCK\0showUAVStatus"
 };
 #undef QT_MOC_LITERAL
 
@@ -67,25 +74,28 @@ static const uint qt_meta_data_WorkThread[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       8,       // signalCount
+      11,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   59,    2, 0x06 /* Public */,
-       4,    1,   64,    2, 0x06 /* Public */,
-       6,    3,   67,    2, 0x06 /* Public */,
-      10,    0,   74,    2, 0x06 /* Public */,
-      11,    0,   75,    2, 0x06 /* Public */,
-      12,    0,   76,    2, 0x06 /* Public */,
-      13,    2,   77,    2, 0x06 /* Public */,
-      15,    0,   82,    2, 0x06 /* Public */,
+       1,    2,   74,    2, 0x06 /* Public */,
+       4,    1,   79,    2, 0x06 /* Public */,
+       6,    3,   82,    2, 0x06 /* Public */,
+      10,    0,   89,    2, 0x06 /* Public */,
+      11,    0,   90,    2, 0x06 /* Public */,
+      12,    0,   91,    2, 0x06 /* Public */,
+      13,    2,   92,    2, 0x06 /* Public */,
+      15,    0,   97,    2, 0x06 /* Public */,
+      16,    2,   98,    2, 0x06 /* Public */,
+      19,    0,  103,    2, 0x06 /* Public */,
+      20,    0,  104,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      16,    2,   83,    2, 0x0a /* Public */,
+      21,    2,  105,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Int, 0x80000000 | 3, QMetaType::Int,    2,    2,
@@ -95,6 +105,9 @@ static const uint qt_meta_data_WorkThread[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int, QMetaType::Int,   14,    8,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Float, QMetaType::Float,   17,   18,
+    QMetaType::Void,
     QMetaType::Void,
 
  // slots: parameters
@@ -118,7 +131,10 @@ void WorkThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 5: _t->signal_ShowCurrentWinchPos(); break;
         case 6: _t->signal_ShowCurrentIO((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 7: _t->signal_SC_AutoTest(); break;
-        case 8: { int _r = _t->showUAVStatus((*reinterpret_cast< char*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])));
+        case 8: _t->signal_WINCH_DELIVER((*reinterpret_cast< float(*)>(_a[1])),(*reinterpret_cast< float(*)>(_a[2]))); break;
+        case 9: _t->signal_WinchLoadUPandLock(); break;
+        case 10: _t->signal_WINCH_LOCK(); break;
+        case 11: { int _r = _t->showUAVStatus((*reinterpret_cast< char*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])));
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = std::move(_r); }  break;
         default: ;
         }
@@ -180,6 +196,27 @@ void WorkThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
                 return;
             }
         }
+        {
+            using _t = void (WorkThread::*)(float , float );
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&WorkThread::signal_WINCH_DELIVER)) {
+                *result = 8;
+                return;
+            }
+        }
+        {
+            using _t = void (WorkThread::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&WorkThread::signal_WinchLoadUPandLock)) {
+                *result = 9;
+                return;
+            }
+        }
+        {
+            using _t = void (WorkThread::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&WorkThread::signal_WINCH_LOCK)) {
+                *result = 10;
+                return;
+            }
+        }
     }
 }
 
@@ -212,13 +249,13 @@ int WorkThread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 12;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 12)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 9;
+        _id -= 12;
     }
     return _id;
 }
@@ -275,6 +312,25 @@ void WorkThread::signal_ShowCurrentIO(int _t1, int _t2)
 void WorkThread::signal_SC_AutoTest()
 {
     QMetaObject::activate(this, &staticMetaObject, 7, nullptr);
+}
+
+// SIGNAL 8
+void WorkThread::signal_WINCH_DELIVER(float _t1, float _t2)
+{
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t2))) };
+    QMetaObject::activate(this, &staticMetaObject, 8, _a);
+}
+
+// SIGNAL 9
+void WorkThread::signal_WinchLoadUPandLock()
+{
+    QMetaObject::activate(this, &staticMetaObject, 9, nullptr);
+}
+
+// SIGNAL 10
+void WorkThread::signal_WINCH_LOCK()
+{
+    QMetaObject::activate(this, &staticMetaObject, 10, nullptr);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

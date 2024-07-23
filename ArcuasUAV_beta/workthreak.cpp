@@ -5,9 +5,12 @@
 //#include <wiringPi.h>
 #include <sys/time.h>
 #include "gpiod.h"
+#include "global.h"
 
 extern float g_Current_WinchPos;
 extern float g_Current_WinchTorque;
+extern int g_WinchLoadUPandLock;
+extern int g_WINCH_DELIVER;
 
 WorkThread::WorkThread()
 {
@@ -33,71 +36,11 @@ void WorkThread::SetCyberGearObject(CyberGear* p)
     pCyberGear = p;
 }
 
-/*
-extern struct gpiod_line *gpioline_BTN1;
-extern struct gpiod_line *gpioline_BTN2;
-#define IO_BTN1 18
-#define IO_BTN2 22
-
-extern int gLast_io_18;
-extern int gLast_io_22;
-extern int g_io_18;
-extern int g_io_22;
-
-struct timeval tv;
-struct tm* st;
-static double latest_time=0;
-__suseconds_t start_time=0;
-__suseconds_t end_time=0;
-__suseconds_t latest_start_time=0;
-double pwm_duty=0;
-double pwm_period=0;
-void WorkThread::CheckPWM()
-{
-    //check IO button
-    g_io_18=gpiod_line_get_value(gpioline_BTN1);
-    g_io_22=gpiod_line_get_value(gpioline_BTN2);
-
-    //check PWM
-    if(gLast_io_18!=g_io_18)
-    {
-        if(g_io_18==1)
-        {
-            gettimeofday(&tv, NULL);
-            start_time = tv.tv_usec;
-            if(latest_start_time!=0)
-            {
-                pwm_duty = (end_time-latest_start_time);
-                pwm_duty = pwm_duty/(start_time-latest_start_time)*100.0;
-                pwm_period = 1000000.0/(start_time-latest_start_time);
-
-                //qDebug() <<"start = "<< latest_start_time << "    stop = " << end_time << "   new_start = "<< start_time;
-                //qDebug() <<"duty = "<< duty <<"% ";
-                //qDebug() <<"period = "<< period <<"Hz \r\n";
-            }
-        }
-        if(g_io_18==0)
-        {
-            gettimeofday(&tv, NULL);
-            end_time = tv.tv_usec;
-            latest_start_time = start_time;
-            //qDebug()<<"plus time = "<<(end_time-start_time)<<"   ";
-        }
-
-    }
-
-    gLast_io_18 = g_io_18;
-    gLast_io_22 = g_io_22;
-}
-*/
-
 void WorkThread::run()
 {
     //LedProcessing();
     while(true)
     {      
-
-        ///*
         //can data read from winch.
         pCyberGear->motor_can_rx();
         QThread::msleep(20);
@@ -108,12 +51,12 @@ void WorkThread::run()
             workCount=0;
             g_Current_WinchPos = pCyberGear->Motor_GetPos();
             g_Current_WinchTorque = pCyberGear->Motor_GetTorque();
+
+#ifndef  USE_TO_LIB
             emit signal_ShowCurrentWinchPos();
+            WinchTest();
+#endif
         }
-        //*/
-
-        //CheckPWM();
-
 
         if( is_Work)
         {
@@ -141,6 +84,24 @@ void WorkThread::EnableSCTest(bool bState)
 
 void WorkThread::WinchTest()
 {
+    if(bEnableWinchTest)
+    {
+        if(g_WinchLoadUPandLock==1)
+        {
+            g_WinchLoadUPandLock = 0;
+            QThread::msleep(5000);
+            emit signal_WINCH_DELIVER(0, 10);
+        }
+        else if(g_WINCH_DELIVER == 1 )
+        {
+            QThread::msleep(5000);
+            //emit signal_WinchLoadUPandLock();
+            emit signal_WINCH_LOCK();
+        }
+        //
+    }
+    //QThread::msleep(100);
+
     /*
     int pos=0;
     if(!b_Winch_Ready)

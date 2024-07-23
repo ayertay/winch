@@ -1,3 +1,7 @@
+//PWMthread.cpp
+//1. check PWM and IO input.
+//
+
 #include "PWMthread.h"
 #include <QDebug>
 #include <sys/time.h>
@@ -31,6 +35,12 @@ PWMThread::PWMThread()
 {
     workCount = 0;
     is_Work   = false;
+
+    gettimeofday(&tv_Begin, NULL);
+
+    t_outPWM_H = tv.tv_usec;    //PWM start time
+    t_outPWM_val = 5000;         //PWM set Val
+    g_io_22 = 1;
 }
 
 __suseconds_t start_time=0;
@@ -52,7 +62,7 @@ void PWMThread::CheckPWM()
 
     //check IO button
     g_io_18=gpiod_line_get_value(gpioline_BTN1);
-    g_io_22=gpiod_line_get_value(gpioline_BTN2);
+//    g_io_22=gpiod_line_get_value(gpioline_BTN2);
     g_io_SCL=gpiod_line_get_value(gpioline_BTN3);
     g_io_SDA=gpiod_line_get_value(gpioline_BTN4);
 
@@ -105,9 +115,41 @@ void PWMThread::CheckPWM()
     }
 
     gLast_io_18 = g_io_18;
-    gLast_io_22 = g_io_22;
+//    gLast_io_22 = g_io_22;
     gLast_io_SCL = g_io_SCL;
     gLast_io_SDA = g_io_SDA;
+}
+
+void PWMThread::SetPWM(int pwmVal)
+{
+    t_outPWM_val = pwmVal;
+}
+
+long long t = 0;
+int m_g_io_22 = 1;
+double dDuration = 0;
+void PWMThread::MakePWM()
+{
+    //make PWM(50Hz)
+    gettimeofday(&tv, NULL);
+    dDuration = 1000000.0*(tv.tv_sec-tv_Begin.tv_sec) + (tv.tv_usec-tv_Begin.tv_usec);
+    //dDuration = (tv.tv_usec-tv_Begin.tv_usec)/1000.0;
+    t = dDuration;
+    //qDebug()<<"Duration_time = "<< t << "     tv=" << dDuration;
+    if((t>=t_outPWM_val)&&(m_g_io_22==1))   //one period
+    {
+        m_g_io_22 = 0;
+        gpiod_line_set_value(gpioline_BTN2, 0);
+    }
+
+    //qDebug()<<"current_time = "<< t << "     tv=" << tv.tv_usec << "     tH=" << t_outPWM_H;
+    if((t>=20000)&&(m_g_io_22==0))   //one period
+    {
+        m_g_io_22 = 1;
+        gpiod_line_set_value(gpioline_BTN2, 1);
+        //gettimeofday(&tv_Begin, NULL);
+        tv_Begin = tv;
+    }
 }
 
 void PWMThread::run()
@@ -115,7 +157,7 @@ void PWMThread::run()
     while(true)
     {      
         CheckPWM();
-
+        MakePWM();
 
         if( is_Work)
         {

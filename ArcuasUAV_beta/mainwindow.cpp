@@ -49,6 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&mCore,SIGNAL(signal_NetStatus(int)),this,SLOT(On_NetStatus(int)));
     connect(&mCore,SIGNAL(signal_ShowCurrentIO(int,int)),this,SLOT(ON_ShowCurrentIO(int,int)));
 
+    connect(&mCore,SIGNAL(signal_ShowPWM()),this,SLOT(ON_ShowPWM()));
+
     connect(mCore.p_pwmThread,SIGNAL(signal_ShowCurrentIO(int,int)),this,SLOT(ON_ShowCurrentIO(int,int)));
 }
 
@@ -59,15 +61,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_BtnWinchTest_clicked()
 {
-    int iHight=0;
+    float fHight=0;
     int iSpeed=0;
-    iHight = ui->spinBox_WinchPos->text().toInt();
+    fHight = ui->spinBox_WinchPos->text().toFloat();
     //mCore.Winch_SetPos(iHight, 3, 2, 5, 1);
     iSpeed = ui->spinBox_WinchSpeed->text().toInt();
 
     mCore.mCyberGear.Motor_Enable();
     mCore.mCyberGear.Motor_Speed(iSpeed);
-    mCore.mCyberGear.Motor_Move(iHight);
+    mCore.mCyberGear.Motor_Move(fHight);
 }
 
 void MainWindow::on_pushButton_AutoTest_clicked(bool checked)
@@ -232,14 +234,15 @@ void MainWindow::on_BtnWinch_Reset_clicked()
 void MainWindow::on_BtnWinch_Delivery_clicked()
 {
     //Delivery
-    mCore.WinchDelivery(ui->spinBox_WinchSpeed->text().toInt());
+    //mCore.WinchDelivery(ui->spinBox_WinchSpeed->text().toInt());
+    mCore.WINCH_DELIVER(0, ui->spinBox_WinchSpeed->text().toFloat());
 }
 
 
 void MainWindow::on_BtnWinch_Retract_clicked()
 {
     //Retract
-    mCore.WinchRetract(ui->spinBox_WinchSpeed->text().toInt());
+    mCore.WinchRetract(ui->spinBox_WinchSpeed->text().toFloat());
 }
 
 
@@ -287,5 +290,38 @@ void MainWindow::ON_ShowCurrentIO(int io_idx,int v)
 
 void MainWindow::ON_ShowPWM()
 {
-    ;
+    ui->label_TIE_LEN->setText(QString::number(mCore.mCyberGear.m_tie_length, 'f', 4));
 }
+
+void MainWindow::on_BtnWinch_LOCK_clicked()
+{
+    mCore.WinchLock();
+}
+
+
+void MainWindow::on_BtnWinch_UNLOCK_clicked()
+{
+    mCore.WinchUnlock();
+}
+
+
+void MainWindow::on_BtnWinch_LOAD_UP_LOCK_clicked()
+{
+    //Load up
+    //mCore.WinchLoadUPandLock();
+    mCore.WINCH_LOCK();
+}
+
+
+void MainWindow::on_BtnWinch_HOLD_clicked()
+{
+    //
+    mCore.WINCH_HOLD();
+}
+
+
+void MainWindow::on_BtnWinch_HOLD_LINE_clicked()
+{
+    mCore.WINCH_LOAD_LINE();
+}
+

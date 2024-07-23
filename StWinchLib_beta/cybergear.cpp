@@ -10,11 +10,14 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <QDebug>
+#include <QSettings>
 #include <QTime>
 
 #define MAIN_CAN_ID  254
 #define SYS_CAN_ID   253
 //#define motor_ID 0x03
+
+#define DEBUG_MODE 1
 
 const int MOTOR_CONTROL = 1;
 const int MOTOR_FEEDBACK = 2;
@@ -24,12 +27,19 @@ const int SET_MECHANICAL_ZERO = 6;
 const int SINGLE_PARAM_READ = 17;
 const int SINGLE_PARAM_WRITE = 18;
 
+int gLast_WinchZeroDetected = -1;
+int g_WinchZeroDetected = 1;
+int g_WinchLoadUPandLock=0;
+int g_WINCH_DELIVER=0;
+
 CyberGear::CyberGear(QObject *parent)
     : QObject{parent}
 {
     motor_ID =1;
     m_torque_fdb = 0.0;
     m_DataAutoDump = 0;
+    m_MotorStop = 1;
+    m_tie_length = 0.0;
 }
 
 CyberGear::~CyberGear()
@@ -142,19 +152,17 @@ int CyberGear::motor_can_rx()
         case 0x110100FE:    //0x110103FE
         {
             motor_Decode();
-
-            //buf.resize(sizeof(frameRx.data));
             memcpy(buf.data(), frameRx.data, 8);
-            //buf = frameRx.data;
+
             s_f.buf[0] = frameRx.data[4];
             s_f.buf[1] = frameRx.data[5];
             s_f.buf[2] = frameRx.data[6];
             s_f.buf[3] = frameRx.data[7];
 
-            //QDateTime::
-            //QDateTime current_date_time =QDateTime::currentDateTime();
+#ifdef  DEBUG_MODE
             QTime ttt=QTime::currentTime();
-//            qDebug()<< ttt.toString("hh::mm::ss.zzz") << " "<< buf.toHex(' ') << "  "<<s_f.f;
+            qDebug()<< ttt.toString("hh::mm::ss.zzz") << " "<< buf.toHex(' ') << "  "<<s_f.f;
+#endif
 
             break;
         }
@@ -236,19 +244,74 @@ int CyberGear::motor_can_rx()
             }
             */
 
+            if(g_WinchZeroDetected==0)
+            {
+                if(m_MotorMode==MODE_HOLD_LINE)
+                {
+                    m_tie_length = fabs(m_mechPos);
+                    //save to configfile
+                    //config file init
+                    QSettings *config;
+                    QString path=QStringLiteral("/home/uav/APP/UAV_run/config.ini");
+                    config = new QSettings (path,QSettings::IniFormat, nullptr);
+                    config->beginGroup("WINCH");
+                    config->setValue("TIE_LEN", QString::number(m_tie_length, 'f', 4));
+                    config->sync();
+                    config->endGroup();
+                    delete config;
+                }
+                //motor stop
+                m_MotorMode = MODE_STOP;
+            }
+
+            /*
+            if(g_WinchZeroDetected==0)
+            {
+                m_MotorMode = MODE_NORM;
+                //if((m_MotorMode == MODE_NORM)&&(gLast_WinchZeroDetected!=g_WinchZeroDetected))
+                //if(m_aimPos<m_mechPos)
+                {
+                    Motor_Move(m_mechPos);
+                    //Motor_Stop();
+                    m_torque_fdb = 0.0;
+                    Motor_SetZero();
+                    Motor_Enable();
+
+                    gLast_WinchZeroDetected = g_WinchZeroDetected;
+
+                }
+                return 0;
+            }
+            else
+            {
+                gLast_WinchZeroDetected = g_WinchZeroDetected;
+            }*/
+
             switch(m_MotorMode)
             {
+                case MOTOR_MODE::MODE_STOP:
+                {
+                    if(m_MotorStop==0)
+                    {
+                        Motor_Move(m_mechPos);
+                        sleep(0.05);
+                        Motor_Stop();sleep(0.05);
+                        Motor_SetZero();sleep(0.05);
+                        m_torque_fdb = 0.0;
+                        Motor_Enable();sleep(0.05);
+                        Motor_Speed(20);sleep(0.05);
+                        m_MotorStop = 1;
+                    }
+                    break;
+                }
+                case MOTOR_MODE::MODE_NORM:
+                {
+                    m_MotorStop = 0;
+                    break;
+                }
                 case MOTOR_MODE::MODE_RESET:
                 {  
-                /*
-                    if( m_mechPos<m_aimPos )
-                    {
-                        m_aimPos = m_aimPos - 5;
-                        Motor_Move(m_aimPos);
-                    }
-                */
-
-
+                    m_MotorStop = 0;
                     if(fabs(m_torque_fdb)>0.3)
                     {
                         Motor_Move(m_mechPos);
@@ -260,8 +323,27 @@ int CyberGear::motor_can_rx()
                     }
                     break;
                 }
+                /*
+                case MOTOR_MODE::MODE_LOADUP:
+                {
+                    if(g_WinchZeroDetected==0)
+                    {
+                        Motor_Move(m_mechPos);
+                        Motor_Stop();
+                        m_torque_fdb = 0.0;
+                        m_MotorMode = MODE_NORM;
+                        Motor_SetZero();
+                        Motor_Enable();
+
+                        gLast_WinchZeroDetected = g_WinchZeroDetected;
+
+                    }
+                    break;
+                }
+                */
                 case MOTOR_MODE::MODE_DELIVERY:
                 {
+                    m_MotorStop = 0;
                     //
                     if((m_aimPos-m_mechPos)<10)
                     {
@@ -292,8 +374,11 @@ int CyberGear::motor_can_rx()
 
                     break;
                 }
+                case MOTOR_MODE::MODE_HOLD_LINE:
                 case MOTOR_MODE::MODE_RETRACT:
                 {
+                    m_MotorStop = 0;
+
                     if((m_mechPos-m_aimPos)<10)
                     {
                         if(m_aimSpeed>5)
@@ -362,10 +447,11 @@ int CyberGear::motor_can_rx()
                 }
             }
 
+#ifdef  DEBUG_MODE
             QTime ttt=QTime::currentTime();
             //qDebug()<< ttt.toString("hh::mm::ss.zzz") << " "<< buf.toHex(' ') << "  "<<s_f.f;
-//            qDebug()<< ttt.toString("hh::mm::ss.zzz") << " "<< buf.toHex(' ') <<" "<< "  aimPos="<< QString::number(m_aimPos,'f',4)<< "  mechPos="<< QString::number(s_mechPos.f,'f',4)<< "  m_torque="<< QString::number(m_torque_fdb,'f',4)<< "  s_torque_fdb="<< QString::number(s_torque_fdb.f,'f',4);
-
+            qDebug()<< ttt.toString("hh::mm::ss.zzz") << " "<< buf.toHex(' ') <<" "<< "  aimPos="<< QString::number(m_aimPos,'f',4)<< "  mechPos="<< QString::number(s_mechPos.f,'f',4)<< "  m_torque="<< QString::number(m_torque_fdb,'f',4)<< "  s_torque_fdb="<< QString::number(s_torque_fdb.f,'f',4);
+#endif
             break;
         }
         }
@@ -514,7 +600,7 @@ int CyberGear::Motor_Disenable()
     return 0;
 }
 
-int CyberGear::Motor_Speed(int spd)
+int CyberGear::Motor_Speed(float spd)
 {
     a.f = spd;
     m_aimSpeed = spd;
@@ -705,4 +791,9 @@ int CyberGear::Motor_DataAutoDump(int i_onoff)
 void CyberGear::Motor_Mode(int mode)
 {
     m_MotorMode = mode;
+}
+
+int CyberGear::Motor_Read_Mode()
+{
+    return m_MotorMode;
 }

@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[35];
-    char stringdata0[577];
+    QByteArrayData data[40];
+    char stringdata0[717];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -66,7 +66,12 @@ QT_MOC_LITERAL(30, 443, 28), // "on_BtnWinch_Delivery_clicked"
 QT_MOC_LITERAL(31, 472, 23), // "on_MainWindow_destroyed"
 QT_MOC_LITERAL(32, 496, 27), // "on_BtnWinch_Retract_clicked"
 QT_MOC_LITERAL(33, 524, 24), // "on_BtnWinch_LOAD_clicked"
-QT_MOC_LITERAL(34, 549, 27) // "on_BtnWinch_LOAD_UP_clicked"
+QT_MOC_LITERAL(34, 549, 27), // "on_BtnWinch_LOAD_UP_clicked"
+QT_MOC_LITERAL(35, 577, 24), // "on_BtnWinch_LOCK_clicked"
+QT_MOC_LITERAL(36, 602, 26), // "on_BtnWinch_UNLOCK_clicked"
+QT_MOC_LITERAL(37, 629, 32), // "on_BtnWinch_LOAD_UP_LOCK_clicked"
+QT_MOC_LITERAL(38, 662, 24), // "on_BtnWinch_HOLD_clicked"
+QT_MOC_LITERAL(39, 687, 29) // "on_BtnWinch_HOLD_LINE_clicked"
 
     },
     "MainWindow\0on_BtnWinchTest_clicked\0\0"
@@ -86,7 +91,12 @@ QT_MOC_LITERAL(34, 549, 27) // "on_BtnWinch_LOAD_UP_clicked"
     "on_MainWindow_destroyed\0"
     "on_BtnWinch_Retract_clicked\0"
     "on_BtnWinch_LOAD_clicked\0"
-    "on_BtnWinch_LOAD_UP_clicked"
+    "on_BtnWinch_LOAD_UP_clicked\0"
+    "on_BtnWinch_LOCK_clicked\0"
+    "on_BtnWinch_UNLOCK_clicked\0"
+    "on_BtnWinch_LOAD_UP_LOCK_clicked\0"
+    "on_BtnWinch_HOLD_clicked\0"
+    "on_BtnWinch_HOLD_LINE_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -96,7 +106,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      24,   14, // methods
+      29,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -104,30 +114,35 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  134,    2, 0x08 /* Private */,
-       3,    1,  135,    2, 0x08 /* Private */,
-       5,    0,  138,    2, 0x08 /* Private */,
-       6,    0,  139,    2, 0x08 /* Private */,
-       7,    1,  140,    2, 0x08 /* Private */,
-       9,    0,  143,    2, 0x08 /* Private */,
-      10,    0,  144,    2, 0x08 /* Private */,
-      11,    0,  145,    2, 0x08 /* Private */,
-      12,    0,  146,    2, 0x08 /* Private */,
-      13,    1,  147,    2, 0x08 /* Private */,
-      14,    0,  150,    2, 0x08 /* Private */,
-      15,    1,  151,    2, 0x08 /* Private */,
-      17,    4,  154,    2, 0x08 /* Private */,
-      21,    0,  163,    2, 0x08 /* Private */,
-      22,    1,  164,    2, 0x08 /* Private */,
-      24,    2,  167,    2, 0x08 /* Private */,
-      27,    0,  172,    2, 0x08 /* Private */,
-      28,    0,  173,    2, 0x08 /* Private */,
-      29,    0,  174,    2, 0x08 /* Private */,
-      30,    0,  175,    2, 0x08 /* Private */,
-      31,    0,  176,    2, 0x08 /* Private */,
-      32,    0,  177,    2, 0x08 /* Private */,
-      33,    0,  178,    2, 0x08 /* Private */,
-      34,    0,  179,    2, 0x08 /* Private */,
+       1,    0,  159,    2, 0x08 /* Private */,
+       3,    1,  160,    2, 0x08 /* Private */,
+       5,    0,  163,    2, 0x08 /* Private */,
+       6,    0,  164,    2, 0x08 /* Private */,
+       7,    1,  165,    2, 0x08 /* Private */,
+       9,    0,  168,    2, 0x08 /* Private */,
+      10,    0,  169,    2, 0x08 /* Private */,
+      11,    0,  170,    2, 0x08 /* Private */,
+      12,    0,  171,    2, 0x08 /* Private */,
+      13,    1,  172,    2, 0x08 /* Private */,
+      14,    0,  175,    2, 0x08 /* Private */,
+      15,    1,  176,    2, 0x08 /* Private */,
+      17,    4,  179,    2, 0x08 /* Private */,
+      21,    0,  188,    2, 0x08 /* Private */,
+      22,    1,  189,    2, 0x08 /* Private */,
+      24,    2,  192,    2, 0x08 /* Private */,
+      27,    0,  197,    2, 0x08 /* Private */,
+      28,    0,  198,    2, 0x08 /* Private */,
+      29,    0,  199,    2, 0x08 /* Private */,
+      30,    0,  200,    2, 0x08 /* Private */,
+      31,    0,  201,    2, 0x08 /* Private */,
+      32,    0,  202,    2, 0x08 /* Private */,
+      33,    0,  203,    2, 0x08 /* Private */,
+      34,    0,  204,    2, 0x08 /* Private */,
+      35,    0,  205,    2, 0x08 /* Private */,
+      36,    0,  206,    2, 0x08 /* Private */,
+      37,    0,  207,    2, 0x08 /* Private */,
+      38,    0,  208,    2, 0x08 /* Private */,
+      39,    0,  209,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -146,6 +161,11 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,   23,
     QMetaType::Void, QMetaType::Int, QMetaType::Int,   25,   26,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -191,6 +211,11 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 21: _t->on_BtnWinch_Retract_clicked(); break;
         case 22: _t->on_BtnWinch_LOAD_clicked(); break;
         case 23: _t->on_BtnWinch_LOAD_UP_clicked(); break;
+        case 24: _t->on_BtnWinch_LOCK_clicked(); break;
+        case 25: _t->on_BtnWinch_UNLOCK_clicked(); break;
+        case 26: _t->on_BtnWinch_LOAD_UP_LOCK_clicked(); break;
+        case 27: _t->on_BtnWinch_HOLD_clicked(); break;
+        case 28: _t->on_BtnWinch_HOLD_LINE_clicked(); break;
         default: ;
         }
     }
@@ -225,13 +250,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 24)
+        if (_id < 29)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 24;
+        _id -= 29;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 24)
+        if (_id < 29)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 24;
+        _id -= 29;
     }
     return _id;
 }

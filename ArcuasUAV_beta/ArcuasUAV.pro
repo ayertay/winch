@@ -44,6 +44,7 @@ HEADERS += \
     chook_heltec.h \
     ctomotorserial.h \
     cybergear.h \
+    global.h \
         mainwindow.h \
     coreuav.h \
     mymqtt.h \

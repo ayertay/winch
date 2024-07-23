@@ -34,10 +34,26 @@ result = lib.add(3, 4)
 print("add = " + str(result))
 result2 = lib.WinchCoreRun(3)
 
-lib.WinchDelivery(30)
+#lib.WinchDelivery(10)
+#sleep(10);
 #lib.WinchSetPos(10, 10)
 
+lib.WinchReset();
+print("wainting reset winch......");
+sleep(3);
+
+lib.WinchLoad();
+sleep(3);
+
+lib.WinchSetPos(10, 0);
+print("wainting Winch load....");
+sleep(10);
+
+#lib.WinchLoadUP();
+#print("Winch load UP to 0 position....");
+
 bPWM_Min = 0
+
 while True:
 	sleep(1)
 	fpos = lib.WinchGetPos();

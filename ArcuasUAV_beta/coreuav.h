@@ -36,6 +36,7 @@ public:
     //winch
     CTomotorSerial mWinchTomotor;
     CyberGear      mCyberGear;
+    int            m_WinchLocked;
 
     //Hook
     CHook_Heltec   mHook;
@@ -150,11 +151,26 @@ public slots:
 
     void WinchDataDump(int i_onoff);
     void WinchReset();
-    void WinchDelivery(int speed);
-    void WinchDeliveryEx(int speed, int distance);
-    void WinchRetract(int speed);
+    void WinchDelivery(float speed);
+    void WinchDeliveryEx(float distance, float speed);
+    void WinchRetract(float speed);
     void WinchLoad();
     void WinchLoadUP();
+    void WinchLoadUPandLock();
+
+    void WinchLock();
+    void WinchUnlock();
+
+    //the new API is add at 2024-06-19
+    void WINCH_RELAXED();
+    void WINCH_RELATIVE_LENGTH_CONTROL(float distance, float speed);
+    void WINCH_RATE_CONTROL(float speed);
+    void WINCH_LOCK();
+    void WINCH_DELIVER(float distance, float speed);
+    void WINCH_HOLD();
+    void WINCH_RETRACT(float speed);
+    void WINCH_LOAD_LINE();
+    void WINCH_ABANDON_LINE();
 
     //Hook
     /*

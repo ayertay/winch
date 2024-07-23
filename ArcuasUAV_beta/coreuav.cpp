@@ -1,8 +1,4 @@
 #include "coreuav.h"
-//#include "cDroneKit.h"
-//#include "StStreamKit.h"
-//#include "cDroneKit.h"
-
 #include "ctomotorserial.h"
 #include "cybergear.h"
 #include <QSettings>
@@ -11,6 +7,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include "gpiod.h"
+#include "global.h"
+#include <sys/time.h>
 
 struct gpiod_chip *gpiochip;
 struct gpiod_line *gpioline_BTN1;
@@ -24,6 +22,8 @@ struct gpiod_line *gpioline_BTN4;
 
 QString   G_PLAN_ID = "0001";
 char *g_SERVER_IP;
+int   g_WINCH_ID=1;
+float g_WINCH_TIE_LEN=0.0;
 
 int   g_Current_SCPos = 0;
 float g_Current_WinchPos = 0.0;
@@ -37,6 +37,9 @@ extern double pwm_duty;
 extern double pwm_period;
 
 extern int gLast_WinchZeroDetected;
+extern int g_WinchZeroDetected;
+extern int g_WinchLoadUPandLock;
+extern int g_WINCH_DELIVER;
 
 CoreUAV::CoreUAV(QObject *parent) : QObject(parent)
 {
@@ -61,7 +64,7 @@ CoreUAV::CoreUAV(QObject *parent) : QObject(parent)
 
     //Winch init
     //p_WinchPort = new QSerialPort();
-
+    m_WinchLocked = 0;
 }
 
 CoreUAV::~CoreUAV()
@@ -84,6 +87,7 @@ int CoreUAV::init()
 {
 
     QVariant v;
+
     //Get config information from config.ini
     // IP,port,plane ID
     config->beginGroup("SERVER");
@@ -93,20 +97,26 @@ int CoreUAV::init()
     QByteArray ba2;
     ba2.append(g_sSERVER_IP);
     g_SERVER_IP = ba2.data();
-
+    //
     v=config->value("PORT", "1884");
     g_SERVER_PORT=v.toInt();
     v=config->value("ID_COMPANY", "0");
     gs_ID_Service=v.toString();
-
-    //g_ID_Service =v.toInt();
+    //
     v=config->value("ID_PLANE", G_PLAN_ID);
     gs_ID_Device=v.toString();
-    //g_ID_Device =v.toInt();
-
+    //
     v=config->value("TIME_STATUS_SEC", "10");
     g_Time_Status=v.toInt();
+    //
+    config->endGroup();
 
+    //Get winch ID,Length
+    config->beginGroup("WINCH");
+    v=config->value("ID", "1");
+    g_WINCH_ID=v.toInt();
+    v=config->value("TIE_LEN", "0");
+    g_WINCH_TIE_LEN=v.toFloat();
     config->endGroup();
 
     MQTT_SUB_FROM    = gMqttPath+"/from/drone/"+gs_ID_Device+"/";
@@ -133,25 +143,29 @@ int CoreUAV::init()
 
     CreateLog();
 
+#ifndef  USE_TO_LIB
     connect(p_myMqtt,SIGNAL(signal_SubMsg(QString,QString)),this,SLOT(On_SubMsg(QString,QString)));
-
+    connect(p_taskWork,SIGNAL(signal_WINCH_DELIVER(float,float)),this,SLOT(WINCH_DELIVER(float,float)));
+    connect(p_taskWork, SIGNAL(signal_WinchLoadUPandLock()), this, SLOT(WinchLoadUPandLock()));
+    connect(p_taskWork, SIGNAL(signal_WINCH_LOCK()), this, SLOT(WINCH_LOCK()));
     //connect(p_taskWork, SIGNAL(SignalgetStatusReady(char*,int)), this, SLOT(PostUAVStatus(char*,int)));
     //connect(p_taskWork, SIGNAL(SignalPostUAVStatus(QString)), this, SLOT(OnPostUAVStatus(QString)));
     //connect(p_taskWork,SIGNAL(signal_Winch_SetPos(int,int,int)),this,SLOT(On_Winch_SetPos(int,int,int)));
     //connect(p_taskWork,SIGNAL(signal_Winch_ReadPos()),this,SLOT(Winch_ReadPos()));
     //connect(p_taskWork,SIGNAL(signal_SC_SetPos(int,int,int,int)),this,SLOT(On_SC_SetPos(i20nt,int,int)));
     //connect(p_taskWork,SIGNAL(signal_SC_AutoTest()),this,SLOT(On_SC_AutoTest()));
-
+#endif
 
     //Open Hook Port
     //mHook.Init("/dev/ttyUSB1", HOOK_LORA_ADDR);
 
     //CyberGear can init
-    mCyberGear.Motor_Init(0x3);delay(0.1);
+    mCyberGear.Motor_Init(g_WINCH_ID);delay(0.1);
     mCyberGear.Motor_SetZero();delay(0.1);
     mCyberGear.Motor_Move(0);delay(0.1);
     mCyberGear.Motor_SetMode(1);delay(0.1);
     mCyberGear.Motor_Enable();delay(0.1);
+    mCyberGear.m_tie_length = g_WINCH_TIE_LEN;
     //mCyberGear.Motor_limit_cur(0.5);delay(0.1);  
     delay(0.2);
     //mCyberGear.Motor_DataAutoDump(1);
@@ -206,11 +220,13 @@ int CoreUAV::run()
         }
     }
 
+#ifndef  USE_TO_LIB
     ///定时器
     update_time = new QTimer();
     connect(update_time,SIGNAL(timeout()),this,SLOT(time_update()));
     update_time->start(1000);
     beginTime = QDateTime::currentDateTime();
+#endif
 
     return ret;
 }
@@ -254,6 +270,7 @@ void CoreUAV::On_Winch_SetPos(int alt,int v,int v_acc, int torque, int isbrake)
 
 void CoreUAV::StartWincTest()
 {
+    WinchLoadUPandLock();
     p_taskWork->EnableWinchTest(true);
 }
 void CoreUAV::StopWincTest()
@@ -454,7 +471,7 @@ int CoreUAV::GPIO_Init()
     if (ret != 0)
         return 0;
     delay(200);
-    ret = gpiod_line_request_input(gpioline_BTN2, "gpio");
+    ret = gpiod_line_request_output(gpioline_BTN2, "gpio", 0);
     if (ret != 0)
         return 0;
     delay(200);
@@ -515,108 +532,17 @@ int CoreUAV::Led_Init()
 
 void CoreUAV::Led_Set(int idx_group, int clr)
 {
-/*
-    switch(idx_group)
-    {
-    case 1:
-        switch(clr)
-        {
-        case 1:         //WHITE
-            led1_1 = LOW;
-            led1_2 = LOW;
-            digitalWrite(26,led1_1);
-            digitalWrite(27,led1_2);
 
-            p_taskWork->SetLed(1, led1_1);
-            p_taskWork->SetLed(2, led1_2);
-            break;
-        case 2:         //RED
-            led1_1 = HIGH;
-            led1_2 = LOW;
-            digitalWrite(26,led1_1);
-            digitalWrite(27,led1_2);
-
-            p_taskWork->SetLed(1, led1_1);
-            p_taskWork->SetLed(2, led1_2);
-            break;
-        case 3:         //GREEN
-            led1_1 = LOW;
-            led1_2 = HIGH;
-            digitalWrite(26,led1_1);
-            digitalWrite(27,led1_2);
-
-            p_taskWork->SetLed(1, led1_1);
-            p_taskWork->SetLed(2, led1_2);
-            break;
-        }
-        break;
-    case 2:
-        switch(clr)
-        {
-        case 1:
-            led2_1 = LOW;
-            led2_2 = LOW;
-            digitalWrite(28,led2_1);
-            digitalWrite(29,led2_2);
-
-            p_taskWork->SetLed(3, led2_1);
-            p_taskWork->SetLed(4, led2_2);
-            break;
-        case 2:
-            led2_1 = LOW;
-            led2_2 = HIGH;
-            digitalWrite(28,led2_1);
-            digitalWrite(29,led2_2);
-
-            p_taskWork->SetLed(3, led2_1);
-            p_taskWork->SetLed(4, led2_2);
-            break;
-        case 3:
-            led2_1 = HIGH;
-            led2_2 = LOW;
-            digitalWrite(28,led2_1);
-            digitalWrite(29,led2_2);
-
-            p_taskWork->SetLed(3, led2_1);
-            p_taskWork->SetLed(4, led2_2);
-            break;
-        }
-        break;
-    }
-*/
 }
 
 void CoreUAV::Led_ON(bool isFlash)
 {
-/*
-    if(isFlash)
-    {
-        p_taskWork->EnableLedFlash(true);
-    }
-*/
+
 }
 
 void CoreUAV::Led_OFF()
 {
-/*
-    p_taskWork->EnableLedFlash(false);
 
-    led1_1 = HIGH;
-    led1_2 = HIGH;
-    digitalWrite(26,led1_1);
-    digitalWrite(27,led1_2);
-
-    p_taskWork->SetLed(1, led1_1);
-    p_taskWork->SetLed(2, led1_2);
-
-    led2_1 = HIGH;
-    led2_2 = HIGH;
-    digitalWrite(28,led2_1);
-    digitalWrite(29,led2_2);
-
-    p_taskWork->SetLed(3, led2_1);
-    p_taskWork->SetLed(4, led2_2);
-*/
 }
 
 void CoreUAV::Led_SetFlash(int intervel)
@@ -648,6 +574,17 @@ void CoreUAV::time_update()
     {
         mCyberGear.Motor_DataAutoDump(1);
     }
+
+    //show winch led
+    qDebug()<< "g_WINCH_DELIVER=" << g_WINCH_DELIVER << "g_WinchLoadUPandLock=" << g_WinchLoadUPandLock;
+    /*
+    if(g_WINCH_DELIVER==1)
+    {
+        qDebug()<< "g_WINCH_DELIVER=" << g_WINCH_DELIVER
+    }
+    */
+
+    //g_tie_length = mCyberGear.m_tie_length;
 
     //show PWM
     signal_ShowPWM();
@@ -1189,7 +1126,7 @@ void CoreUAV::WinchReset()
     //if(mCyberGear.m_mechPos)
 }
 
-void CoreUAV::WinchDelivery(int speed)
+void CoreUAV::WinchDelivery(float speed=10)
 {
     mCyberGear.m_aimPos = 20;
 
@@ -1204,7 +1141,7 @@ void CoreUAV::WinchDelivery(int speed)
     sleep(0.05);
 }
 
-void CoreUAV::WinchDeliveryEx(int speed, int distance)
+void CoreUAV::WinchDeliveryEx(float distance, float speed=10)
 {
     mCyberGear.m_aimPos = 20;
 
@@ -1219,7 +1156,7 @@ void CoreUAV::WinchDeliveryEx(int speed, int distance)
     sleep(0.05);
 }
 
-void CoreUAV::WinchRetract(int speed)
+void CoreUAV::WinchRetract(float speed)
 {
     mCyberGear.m_aimPos = 0;
     mCyberGear.Motor_Enable();
@@ -1254,4 +1191,307 @@ void CoreUAV::WinchLoadUP()
     sleep(0.05);
     mCyberGear.Motor_Move(-1000.0);
     sleep(0.05);
+}
+
+extern float fabs(float v);
+
+void CoreUAV::WinchLoadUPandLock()
+{
+    g_WINCH_DELIVER = 0;
+    g_WinchLoadUPandLock = 0;
+    do
+    {
+        WinchLoadUP();
+
+        struct timeval l_tv;
+        struct timeval l_tv_Begin;
+        double dDuration=0;
+        int    i_ZeroCheck=0;
+        gettimeofday(&l_tv_Begin, NULL);
+        while(g_WinchZeroDetected==1)
+        {
+            mCyberGear.Motor_GetPos();
+            mCyberGear.Motor_GetTorque();
+            //qDebug()<< "pos= " << mCyberGear.Motor_GetPos() << "      torque= " << mCyberGear.Motor_GetTorque();
+
+            if((mCyberGear.Motor_GetPos()<0.5) && (i_ZeroCheck==0))
+            {
+                gettimeofday(&l_tv_Begin, NULL);
+                i_ZeroCheck = 1;
+            }
+            if(mCyberGear.Motor_GetPos()<0.005)
+            {
+                gettimeofday(&l_tv, NULL);
+                dDuration = 1000000.0*(l_tv.tv_sec-l_tv_Begin.tv_sec) + (l_tv.tv_usec-l_tv_Begin.tv_usec);
+                if(i_ZeroCheck==1)
+                {
+                    if(dDuration>5000000.0)
+                    {
+                        g_WinchZeroDetected=0;
+                    }
+                }
+                else
+                {
+                    if(dDuration>20000000.0)
+                    {
+                        g_WinchZeroDetected=0;
+                    }
+                }
+            }
+
+        }
+        sleep(1);
+    }
+    while(g_WinchZeroDetected==1);
+
+/*
+    qDebug()<<  "      torque = " << mCyberGear.Motor_GetTorque();
+    if( fabs(mCyberGear.Motor_GetTorque())<2.0)
+    {
+        sleep(0.05);
+        mCyberGear.Motor_Speed(15);
+        sleep(0.05);
+        mCyberGear.Motor_Move(-0.2);
+        sleep(3);
+    }
+    else
+    {
+        sleep(0.05);
+        mCyberGear.Motor_Speed(30);
+        sleep(1);
+        mCyberGear.Motor_Move(-0.5);
+
+        //float pos=-0.2;
+        //qDebug()<< "pos = " << pos<< "      torque = " << mCyberGear.Motor_GetTorque();
+        //while( fabs(mCyberGear.Motor_GetTorque())<3.2)
+        //{
+        //    mCyberGear.Motor_Move(pos);
+        //    pos = pos - 0.005 ;
+        //    qDebug()<< "pos = " << pos<< "      torque = " << mCyberGear.Motor_GetTorque();
+        //    sleep(0.05);
+        //}
+
+        sleep(3);
+    }
+*/
+    if(g_WinchZeroDetected==0)
+    {
+        WinchLock();
+    }
+
+    sleep(8);
+    mCyberGear.Motor_Speed(1);
+    sleep(0.05);
+    mCyberGear.Motor_Move(5);
+    sleep(3);
+    mCyberGear.Motor_Stop();
+    sleep(1);
+    g_WinchLoadUPandLock=1;
+}
+
+void CoreUAV::WinchLock()
+{
+    p_pwmThread->SetPWM(2500);
+    m_WinchLocked = 1;
+}
+
+void CoreUAV::WinchUnlock()
+{
+    p_pwmThread->SetPWM(700);
+    m_WinchLocked = 0;
+}
+
+//==========================
+//the new API is as fllow
+
+void CoreUAV::WINCH_RELAXED()
+{
+    mCyberGear.Motor_Stop();
+}
+
+void CoreUAV::WINCH_RELATIVE_LENGTH_CONTROL(float distance, float speed=10)
+{
+    mCyberGear.Motor_Enable();
+    sleep(0.05);
+    mCyberGear.Motor_Speed(speed);
+    sleep(0.05);
+    mCyberGear.Motor_Move(mCyberGear.Motor_GetPos()+distance);
+    sleep(0.05);
+}
+
+void CoreUAV::WINCH_RATE_CONTROL(float speed=10)
+{
+    mCyberGear.Motor_Speed(speed);
+    sleep(0.05);
+}
+
+void CoreUAV::WINCH_LOCK()
+{
+    WinchUnlock();
+
+    g_WINCH_DELIVER = 0;
+    g_WinchLoadUPandLock = 0;
+    do
+    {
+        WinchLoadUP();
+        while(g_WinchZeroDetected==1)
+        {
+            mCyberGear.Motor_GetPos();
+            mCyberGear.Motor_GetTorque();
+        }
+        sleep(3);
+    }
+    while(g_WinchZeroDetected==1);
+
+    if(g_WinchZeroDetected==0)
+    {
+        WinchLock();
+    }
+
+    sleep(8);
+    mCyberGear.Motor_Speed(1);
+    sleep(0.05);
+    mCyberGear.Motor_Move(5);
+    sleep(3);
+    mCyberGear.Motor_Stop();
+    sleep(1);
+    g_WinchLoadUPandLock=1;
+}
+
+void CoreUAV::WINCH_DELIVER(float distance, float speed=10)
+{
+    //Delivery
+    g_WINCH_DELIVER = 0;
+    g_WinchLoadUPandLock = 0;
+
+    if(speed<1.0)
+    {
+        speed = 1.0;
+    }
+
+    WinchLoadUP();
+
+    /*
+    if( m_WinchLocked == 1 )
+    {
+        if(mCyberGear.Motor_GetPos()<1.0)
+        {
+            mCyberGear.Motor_Move(-0.5);
+        }
+        else
+        {
+            mCyberGear.Motor_Speed(2);
+            sleep(0.05);
+            mCyberGear.Motor_Mode(MOTOR_MODE::MODE_NORM);
+            sleep(0.05);
+            mCyberGear.Motor_Move(-1000.0);
+            sleep(0.05);
+            while(mCyberGear.Motor_GetPos()<1.0)
+            {
+                sleep(0.05);
+            }
+            mCyberGear.Motor_Move(-0.5);
+        }
+        WinchUnlock();
+    }
+    */
+    struct timeval l_tv;
+    struct timeval l_tv_Begin;
+    double dDuration=0;
+    gettimeofday(&l_tv_Begin, NULL);
+    while((g_WinchZeroDetected==1)&&(fabs(mCyberGear.Motor_GetTorque())<3.2))
+    {
+        //qDebug()<< "pos= " << mCyberGear.Motor_GetPos() << "      torque= " << mCyberGear.Motor_GetTorque();
+        mCyberGear.Motor_GetPos();
+        //mCyberGear.Motor_GetTorque();
+
+        gettimeofday(&l_tv, NULL);
+        dDuration = 1000000.0*(l_tv.tv_sec-l_tv_Begin.tv_sec) + (l_tv.tv_usec-l_tv_Begin.tv_usec);
+        if(dDuration>5000000.0)
+        {
+            return;
+        }
+    }
+
+    WinchUnlock();
+    sleep(8);
+    mCyberGear.Motor_Move(2);
+    sleep(0.05);
+
+
+    g_WinchZeroDetected = 1;
+    mCyberGear.Motor_Mode(MOTOR_MODE::MODE_NORM);
+    sleep(0.05);
+    mCyberGear.Motor_Speed(speed);
+    sleep(0.05);
+    mCyberGear.m_retract_cnt=0;
+    mCyberGear.Motor_Mode(MOTOR_MODE::MODE_DELIVERY);
+    sleep(0.05);
+    mCyberGear.m_aimPos = 20;
+    mCyberGear.Motor_Move(mCyberGear.m_aimPos);
+    sleep(0.05);
+
+    gettimeofday(&l_tv_Begin, NULL);
+    while( ( mCyberGear.Motor_Read_Mode()==MOTOR_MODE::MODE_DELIVERY ) || ( mCyberGear.Motor_Read_Mode()==MOTOR_MODE::MODE_RETRACT  ) )
+    {
+        gettimeofday(&l_tv, NULL);
+        dDuration = 1000000.0*(l_tv.tv_sec-l_tv_Begin.tv_sec) + (l_tv.tv_usec-l_tv_Begin.tv_usec);
+        if(dDuration>((distance/speed)*2000000.0))
+        {
+            return;
+        }
+    }
+    g_WINCH_DELIVER = 1;
+
+
+ /*
+    while(mCyberGear.Motor_GetPos()>0.5)
+    {
+        sleep(0.05);
+    }
+    mCyberGear.Motor_Stop();
+*/
+}
+
+void CoreUAV::WINCH_HOLD()
+{
+    mCyberGear.Motor_Enable();
+    sleep(0.05);
+    mCyberGear.Motor_Speed(2);
+    sleep(0.05);
+    mCyberGear.Motor_Move(mCyberGear.Motor_GetPos());
+    sleep(0.05);
+}
+
+void CoreUAV::WINCH_RETRACT(float speed)
+{
+    WinchRetract(speed);
+}
+
+void CoreUAV::WINCH_LOAD_LINE()
+{   
+    mCyberGear.m_aimPos = 0;
+
+    mCyberGear.Motor_Stop();
+    sleep(0.05);
+    mCyberGear.Motor_SetZero();
+    delay(0.05);
+    mCyberGear.Motor_Move(0);
+    delay(0.05);
+
+    mCyberGear.Motor_Enable();
+    sleep(0.05);
+    mCyberGear.Motor_Speed(5);
+    sleep(0.05);
+    mCyberGear.m_tie_length = 0.0;
+    mCyberGear.Motor_Mode(MOTOR_MODE::MODE_HOLD_LINE);
+    mCyberGear.Motor_Move(-1000);
+    sleep(0.05);
+
+    //mCyberGear.m_tie_length
+}
+
+void CoreUAV::WINCH_ABANDON_LINE()
+{
+    ;
 }
