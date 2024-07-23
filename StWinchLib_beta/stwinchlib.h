@@ -41,6 +41,8 @@ extern "C"
     //the extra API
     STWINCHLIB_EXPORT void WINCH_LATCH_LOCK();
     STWINCHLIB_EXPORT void WINCH_LATCH_UNLOCK();
+    STWINCHLIB_EXPORT float WINCH_LINE_LENGTH();
+    STWINCHLIB_EXPORT void  WINCH_CAN_ECHO(int isEnable);
 }
 
 #endif // STWINCHLIB_H

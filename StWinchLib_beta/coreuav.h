@@ -175,6 +175,8 @@ public slots:
     //the Extra API
     void WINCH_LATCH_LOCK();
     void WINCH_LATCH_UNLOCK();
+    float WINCH_LINE_LENGTH();
+    void  WINCH_CAN_ECHO(int isEnable);
 
     //Hook
     /*

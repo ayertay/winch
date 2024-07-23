@@ -165,7 +165,7 @@ int CoreUAV::init()
     mCyberGear.Motor_Move(0);delay(0.1);
     mCyberGear.Motor_SetMode(1);delay(0.1);
     mCyberGear.Motor_Enable();delay(0.1);
-    mCyberGear.m_tie_length = g_WINCH_TIE_LEN;
+    mCyberGear.m_line_length = g_WINCH_TIE_LEN;
     //mCyberGear.Motor_limit_cur(0.5);delay(0.1);  
     delay(0.2);
     //mCyberGear.Motor_DataAutoDump(1);
@@ -584,7 +584,7 @@ void CoreUAV::time_update()
     }
     */
 
-    //g_tie_length = mCyberGear.m_tie_length;
+    //g_tie_length = mCyberGear.m_line_length;
 
     //show PWM
     signal_ShowPWM();
@@ -1548,12 +1548,12 @@ void CoreUAV::WINCH_LOAD_LINE()
     sleep(0.05);
     mCyberGear.Motor_Speed(5);
     sleep(0.05);
-    mCyberGear.m_tie_length = 0.0;
+    mCyberGear.m_line_length = 0.0;
     mCyberGear.Motor_Mode(MOTOR_MODE::MODE_HOLD_LINE);
     mCyberGear.Motor_Move(-1000);
     sleep(0.05);
 
-    //mCyberGear.m_tie_length
+    //mCyberGear.m_line_length
 }
 
 void CoreUAV::WINCH_ABANDON_LINE()
@@ -1573,4 +1573,14 @@ void CoreUAV::WINCH_LATCH_UNLOCK()
 {
     p_pwmThread->SetPWM(700);
     m_WinchLocked = 0;
+}
+
+float CoreUAV::WINCH_LINE_LENGTH()
+{
+    return mCyberGear.m_line_length;
+}
+
+void CoreUAV::WINCH_CAN_ECHO(int isEnable)
+{
+    mCyberGear.m_echo = isEnable;
 }

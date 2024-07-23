@@ -7,6 +7,9 @@ from time import sleep
 #button1 = Button(3)
 #button2 = Button(2)
 
+#=====================================================
+#libStWinchLib interface defination
+#==================================
 #lib = ctypes.cdll.LoadLibrary("./libStWinchLib.so.1.0.0")
 lib = ctypes.cdll.LoadLibrary("./libStWinchLib.so")
 
@@ -15,8 +18,6 @@ lib.add.restype = ctypes.c_int
 
 lib.WinchCoreRun.argtypes = [ctypes.c_int]
 lib.WinchCoreRun.restype = ctypes.c_int
-
-#lib.WinchReset
 
 lib.WinchDelivery.argtypes = [ctypes.c_int]
 lib.WinchDelivery.restype = ctypes.c_void_p
@@ -38,10 +39,17 @@ lib.WINCH_DELIVER.restype = ctypes.c_void_p
 #lib.WINCH_RETRACT.restype = ctypes.c_void_p
 #lib.WINCH_RELAXED
 
+lib.WINCH_LINE_LENGTH.restype = ctypes.c_float
+
+lib.WINCH_CAN_ECHO.argtypes = [ctypes.c_int]
+
+#=====================================================
+
 result = lib.add(3, 4)
 print("add = " + str(result))
 
 result2 = lib.WinchCoreRun(3)
+lib.WINCH_CAN_ECHO(0)
 sleep(3)
 
 #lib.WINCH_LATCH_UNLOCK()
@@ -55,6 +63,11 @@ sleep(3)
 #lib.WINCH_RELAXED()
 #print("WINCH_RELAXED")
 #sleep(5)
+
+f_line_len = lib.WINCH_LINE_LENGTH()
+print("WINCH_LINE_LENGTH = " + str(f_line_len) + "  rad")
+sleep(5)
+lib.WINCH_CAN_ECHO(1)
 
 while True:
 	sleep(1)

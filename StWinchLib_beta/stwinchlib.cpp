@@ -153,3 +153,13 @@ void WINCH_LATCH_UNLOCK()
 {
     mCore.WINCH_LATCH_UNLOCK();
 }
+
+float WINCH_LINE_LENGTH()
+{
+    return mCore.WINCH_LINE_LENGTH();
+}
+
+void WINCH_CAN_ECHO(int isEnable)
+{
+    mCore.WINCH_CAN_ECHO(isEnable);
+}

@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CoreUAV_t {
-    QByteArrayData data[68];
-    char stringdata0[795];
+    QByteArrayData data[71];
+    char stringdata0[837];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -89,17 +89,20 @@ QT_MOC_LITERAL(53, 618, 15), // "WINCH_LOAD_LINE"
 QT_MOC_LITERAL(54, 634, 18), // "WINCH_ABANDON_LINE"
 QT_MOC_LITERAL(55, 653, 16), // "WINCH_LATCH_LOCK"
 QT_MOC_LITERAL(56, 670, 18), // "WINCH_LATCH_UNLOCK"
-QT_MOC_LITERAL(57, 689, 16), // "SC_StartAutoTest"
-QT_MOC_LITERAL(58, 706, 15), // "SC_StopAutoTest"
-QT_MOC_LITERAL(59, 722, 12), // "On_SC_SetPos"
-QT_MOC_LITERAL(60, 735, 2), // "ID"
-QT_MOC_LITERAL(61, 738, 8), // "Position"
-QT_MOC_LITERAL(62, 747, 4), // "Time"
-QT_MOC_LITERAL(63, 752, 5), // "Speed"
-QT_MOC_LITERAL(64, 758, 11), // "time_update"
-QT_MOC_LITERAL(65, 770, 9), // "On_SubMsg"
-QT_MOC_LITERAL(66, 780, 6), // "sTopic"
-QT_MOC_LITERAL(67, 787, 7) // "message"
+QT_MOC_LITERAL(57, 689, 17), // "WINCH_LINE_LENGTH"
+QT_MOC_LITERAL(58, 707, 14), // "WINCH_CAN_ECHO"
+QT_MOC_LITERAL(59, 722, 8), // "isEnable"
+QT_MOC_LITERAL(60, 731, 16), // "SC_StartAutoTest"
+QT_MOC_LITERAL(61, 748, 15), // "SC_StopAutoTest"
+QT_MOC_LITERAL(62, 764, 12), // "On_SC_SetPos"
+QT_MOC_LITERAL(63, 777, 2), // "ID"
+QT_MOC_LITERAL(64, 780, 8), // "Position"
+QT_MOC_LITERAL(65, 789, 4), // "Time"
+QT_MOC_LITERAL(66, 794, 5), // "Speed"
+QT_MOC_LITERAL(67, 800, 11), // "time_update"
+QT_MOC_LITERAL(68, 812, 9), // "On_SubMsg"
+QT_MOC_LITERAL(69, 822, 6), // "sTopic"
+QT_MOC_LITERAL(70, 829, 7) // "message"
 
     },
     "CoreUAV\0SendSignalPostRequest\0\0char*\0"
@@ -121,7 +124,8 @@ QT_MOC_LITERAL(67, 787, 7) // "message"
     "WINCH_DELIVER\0WINCH_HOLD\0WINCH_RETRACT\0"
     "WINCH_LOAD_LINE\0WINCH_ABANDON_LINE\0"
     "WINCH_LATCH_LOCK\0WINCH_LATCH_UNLOCK\0"
-    "SC_StartAutoTest\0SC_StopAutoTest\0"
+    "WINCH_LINE_LENGTH\0WINCH_CAN_ECHO\0"
+    "isEnable\0SC_StartAutoTest\0SC_StopAutoTest\0"
     "On_SC_SetPos\0ID\0Position\0Time\0Speed\0"
     "time_update\0On_SubMsg\0sTopic\0message"
 };
@@ -133,7 +137,7 @@ static const uint qt_meta_data_CoreUAV[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      40,   14, // methods
+      42,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -141,48 +145,50 @@ static const uint qt_meta_data_CoreUAV[] = {
        9,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    4,  214,    2, 0x06 /* Public */,
-       8,    0,  223,    2, 0x06 /* Public */,
-       9,    1,  224,    2, 0x06 /* Public */,
-      11,    0,  227,    2, 0x06 /* Public */,
-      12,    0,  228,    2, 0x06 /* Public */,
-      13,    4,  229,    2, 0x06 /* Public */,
-      18,    1,  238,    2, 0x06 /* Public */,
-      19,    2,  241,    2, 0x06 /* Public */,
-      22,    0,  246,    2, 0x06 /* Public */,
+       1,    4,  224,    2, 0x06 /* Public */,
+       8,    0,  233,    2, 0x06 /* Public */,
+       9,    1,  234,    2, 0x06 /* Public */,
+      11,    0,  237,    2, 0x06 /* Public */,
+      12,    0,  238,    2, 0x06 /* Public */,
+      13,    4,  239,    2, 0x06 /* Public */,
+      18,    1,  248,    2, 0x06 /* Public */,
+      19,    2,  251,    2, 0x06 /* Public */,
+      22,    0,  256,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      23,    2,  247,    2, 0x0a /* Public */,
-      25,    1,  252,    2, 0x0a /* Public */,
-      26,    5,  255,    2, 0x0a /* Public */,
-      31,    0,  266,    2, 0x0a /* Public */,
-      32,    0,  267,    2, 0x0a /* Public */,
-      33,    1,  268,    2, 0x0a /* Public */,
-      35,    0,  271,    2, 0x0a /* Public */,
-      36,    1,  272,    2, 0x0a /* Public */,
-      38,    2,  275,    2, 0x0a /* Public */,
-      40,    1,  280,    2, 0x0a /* Public */,
-      41,    0,  283,    2, 0x0a /* Public */,
-      42,    0,  284,    2, 0x0a /* Public */,
-      43,    0,  285,    2, 0x0a /* Public */,
-      44,    0,  286,    2, 0x0a /* Public */,
-      45,    0,  287,    2, 0x0a /* Public */,
-      46,    0,  288,    2, 0x0a /* Public */,
-      47,    2,  289,    2, 0x0a /* Public */,
-      48,    1,  294,    2, 0x0a /* Public */,
-      49,    0,  297,    2, 0x0a /* Public */,
-      50,    2,  298,    2, 0x0a /* Public */,
-      51,    0,  303,    2, 0x0a /* Public */,
-      52,    1,  304,    2, 0x0a /* Public */,
-      53,    0,  307,    2, 0x0a /* Public */,
-      54,    0,  308,    2, 0x0a /* Public */,
-      55,    0,  309,    2, 0x0a /* Public */,
-      56,    0,  310,    2, 0x0a /* Public */,
-      57,    0,  311,    2, 0x0a /* Public */,
-      58,    0,  312,    2, 0x0a /* Public */,
-      59,    4,  313,    2, 0x0a /* Public */,
-      64,    0,  322,    2, 0x0a /* Public */,
-      65,    2,  323,    2, 0x0a /* Public */,
+      23,    2,  257,    2, 0x0a /* Public */,
+      25,    1,  262,    2, 0x0a /* Public */,
+      26,    5,  265,    2, 0x0a /* Public */,
+      31,    0,  276,    2, 0x0a /* Public */,
+      32,    0,  277,    2, 0x0a /* Public */,
+      33,    1,  278,    2, 0x0a /* Public */,
+      35,    0,  281,    2, 0x0a /* Public */,
+      36,    1,  282,    2, 0x0a /* Public */,
+      38,    2,  285,    2, 0x0a /* Public */,
+      40,    1,  290,    2, 0x0a /* Public */,
+      41,    0,  293,    2, 0x0a /* Public */,
+      42,    0,  294,    2, 0x0a /* Public */,
+      43,    0,  295,    2, 0x0a /* Public */,
+      44,    0,  296,    2, 0x0a /* Public */,
+      45,    0,  297,    2, 0x0a /* Public */,
+      46,    0,  298,    2, 0x0a /* Public */,
+      47,    2,  299,    2, 0x0a /* Public */,
+      48,    1,  304,    2, 0x0a /* Public */,
+      49,    0,  307,    2, 0x0a /* Public */,
+      50,    2,  308,    2, 0x0a /* Public */,
+      51,    0,  313,    2, 0x0a /* Public */,
+      52,    1,  314,    2, 0x0a /* Public */,
+      53,    0,  317,    2, 0x0a /* Public */,
+      54,    0,  318,    2, 0x0a /* Public */,
+      55,    0,  319,    2, 0x0a /* Public */,
+      56,    0,  320,    2, 0x0a /* Public */,
+      57,    0,  321,    2, 0x0a /* Public */,
+      58,    1,  322,    2, 0x0a /* Public */,
+      60,    0,  325,    2, 0x0a /* Public */,
+      61,    0,  326,    2, 0x0a /* Public */,
+      62,    4,  327,    2, 0x0a /* Public */,
+      67,    0,  336,    2, 0x0a /* Public */,
+      68,    2,  337,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Int, 0x80000000 | 3, 0x80000000 | 3, 0x80000000 | 3, QMetaType::Int,    4,    5,    6,    7,
@@ -222,11 +228,13 @@ static const uint qt_meta_data_CoreUAV[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Float,
+    QMetaType::Void, QMetaType::Int,   59,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   60,   61,   62,   63,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   63,   64,   65,   66,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString, QMetaType::QString,   66,   67,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString,   69,   70,
 
        0        // eod
 };
@@ -275,11 +283,14 @@ void CoreUAV::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 32: _t->WINCH_ABANDON_LINE(); break;
         case 33: _t->WINCH_LATCH_LOCK(); break;
         case 34: _t->WINCH_LATCH_UNLOCK(); break;
-        case 35: _t->SC_StartAutoTest(); break;
-        case 36: _t->SC_StopAutoTest(); break;
-        case 37: _t->On_SC_SetPos((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
-        case 38: _t->time_update(); break;
-        case 39: _t->On_SubMsg((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 35: { float _r = _t->WINCH_LINE_LENGTH();
+            if (_a[0]) *reinterpret_cast< float*>(_a[0]) = std::move(_r); }  break;
+        case 36: _t->WINCH_CAN_ECHO((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 37: _t->SC_StartAutoTest(); break;
+        case 38: _t->SC_StopAutoTest(); break;
+        case 39: _t->On_SC_SetPos((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
+        case 40: _t->time_update(); break;
+        case 41: _t->On_SubMsg((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -379,13 +390,13 @@ int CoreUAV::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 40)
+        if (_id < 42)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 40;
+        _id -= 42;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 40)
+        if (_id < 42)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 40;
+        _id -= 42;
     }
     return _id;
 }

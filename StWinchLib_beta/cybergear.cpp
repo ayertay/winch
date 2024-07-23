@@ -39,7 +39,9 @@ CyberGear::CyberGear(QObject *parent)
     m_torque_fdb = 0.0;
     m_DataAutoDump = 0;
     m_MotorStop = 1;
-    m_tie_length = 0.0;
+    m_line_length = 0.0;
+
+    m_echo = 1;
 }
 
 CyberGear::~CyberGear()
@@ -248,14 +250,14 @@ int CyberGear::motor_can_rx()
             {
                 if(m_MotorMode==MODE_HOLD_LINE)
                 {
-                    m_tie_length = fabs(m_mechPos);
+                    m_line_length = fabs(m_mechPos);
                     //save to configfile
                     //config file init
                     QSettings *config;
                     QString path=QStringLiteral("/home/uav/APP/UAV_run/config.ini");
                     config = new QSettings (path,QSettings::IniFormat, nullptr);
                     config->beginGroup("WINCH");
-                    config->setValue("TIE_LEN", QString::number(m_tie_length, 'f', 4));
+                    config->setValue("TIE_LEN", QString::number(m_line_length, 'f', 4));
                     config->sync();
                     config->endGroup();
                     delete config;
@@ -448,9 +450,12 @@ int CyberGear::motor_can_rx()
             }
 
 #ifdef  DEBUG_MODE
+        if(m_echo)
+        {
             QTime ttt=QTime::currentTime();
             //qDebug()<< ttt.toString("hh::mm::ss.zzz") << " "<< buf.toHex(' ') << "  "<<s_f.f;
             qDebug()<< ttt.toString("hh::mm::ss.zzz") << " "<< buf.toHex(' ') <<" "<< "  aimPos="<< QString::number(m_aimPos,'f',4)<< "  mechPos="<< QString::number(s_mechPos.f,'f',4)<< "  m_torque="<< QString::number(m_torque_fdb,'f',4)<< "  s_torque_fdb="<< QString::number(s_torque_fdb.f,'f',4);
+        }
 #endif
             break;
         }
