@@ -42,9 +42,7 @@ CyberGear::CyberGear(QObject *parent)
     m_torque_fdb = 0.0;
     m_DataAutoDump = 0;
     m_MotorStop = 1;
-    m_line_length = 0.0;
-
-    m_echo = 1;
+    m_tie_length = 0.0;
 }
 
 CyberGear::~CyberGear()
@@ -253,14 +251,14 @@ int CyberGear::motor_can_rx()
             {
                 if(m_MotorMode==MODE_HOLD_LINE)
                 {
-                    m_line_length = fabs(m_mechPos);
+                    m_tie_length = fabs(m_mechPos);
                     //save to configfile
                     //config file init
                     QSettings *config;
                     QString path=QStringLiteral("/home/uav/APP/UAV_run/config.ini");
                     config = new QSettings (path,QSettings::IniFormat, nullptr);
                     config->beginGroup("WINCH");
-                    config->setValue("TIE_LEN", QString::number(m_line_length, 'f', 4));
+                    config->setValue("TIE_LEN", QString::number(m_tie_length, 'f', 4));
                     config->sync();
                     config->endGroup();
                     delete config;
@@ -298,22 +296,23 @@ int CyberGear::motor_can_rx()
                 {
                     if(m_MotorStop==0)
                     {
+                        Motor_Speed(1);sleep(0.05);
                         Motor_Move(m_mechPos);
                         sleep(0.05);
-                        Motor_Stop();sleep(0.05);
+                        Motor_Stop();
+                        sleep(0.05);
                         Motor_SetZero();sleep(0.05);
                         m_torque_fdb = 0.0;
                         Motor_Enable();sleep(0.05);
                         Motor_Speed(20);sleep(0.05);
-                        m_MotorStop = 1;
 
-                        Led_Set(0,3);
+                        m_MotorStop = 1;
+                        Led_Set(0, 3);
                     }
                     break;
                 }
                 case MOTOR_MODE::MODE_NORM:
                 {
-                    //Led_Set(0,3);
                     m_MotorStop = 0;
                     break;
                 }
@@ -328,8 +327,6 @@ int CyberGear::motor_can_rx()
                         m_MotorMode = MODE_NORM;
                         Motor_SetZero();
                         Motor_Enable();
-
-                        Led_Set(0,9);
                     }
                     break;
                 }
@@ -381,7 +378,6 @@ int CyberGear::motor_can_rx()
                         }
                     }
 
-                    Led_Set(0,9);
 
                     break;
                 }
@@ -454,18 +450,14 @@ int CyberGear::motor_can_rx()
                         */
                     }
 
-                    Led_Set(0,9);
                     break;
                 }
             }
 
 #ifdef  DEBUG_MODE
-        if(m_echo)
-        {
             QTime ttt=QTime::currentTime();
             //qDebug()<< ttt.toString("hh::mm::ss.zzz") << " "<< buf.toHex(' ') << "  "<<s_f.f;
             qDebug()<< ttt.toString("hh::mm::ss.zzz") << " "<< buf.toHex(' ') <<" "<< "  aimPos="<< QString::number(m_aimPos,'f',4)<< "  mechPos="<< QString::number(s_mechPos.f,'f',4)<< "  m_torque="<< QString::number(m_torque_fdb,'f',4)<< "  s_torque_fdb="<< QString::number(s_torque_fdb.f,'f',4);
-        }
 #endif
             break;
         }
@@ -813,14 +805,10 @@ int CyberGear::Motor_Read_Mode()
     return m_MotorMode;
 }
 
-int g_led_clr=-1;
 void CyberGear::Led_Set(int idx_group, int clr)
 {
-    if(g_led_clr==clr)
-        return;
     unsigned char data[1]={0x00};
     data[0] = clr;
     m_port485.write((char*)data, 1);
     m_port485.flush();
-    g_led_clr=clr;
 }

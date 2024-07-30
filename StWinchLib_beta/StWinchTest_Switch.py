@@ -67,7 +67,7 @@ sleep(3)
 f_line_len = lib.WINCH_LINE_LENGTH()
 print("WINCH_LINE_LENGTH = " + str(f_line_len) + "  rad")
 sleep(5)
-lib.WINCH_CAN_ECHO(1)
+#lib.WINCH_CAN_ECHO(1)
 
 while True:
 	sleep(1)

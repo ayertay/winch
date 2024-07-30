@@ -66,9 +66,7 @@ public:
     QPushButton *BtnWinch_HOLD_LINE;
     QLabel *label_TIE_LEN;
     QLabel *label_9;
-    QLabel *SDA;
     QLabel *led_Delivery;
-    QLabel *SCL;
     QLabel *label_13;
     QLabel *label_Delivery;
     QLabel *B_1;
@@ -78,6 +76,11 @@ public:
     QLabel *label_14;
     QLabel *label_UPandLOCK;
     QLabel *label_11;
+    QLabel *SDA;
+    QLabel *SCL;
+    QSpinBox *spinBox_LED;
+    QPushButton *Btn_SetLED;
+    QLabel *label_16;
     QGroupBox *groupBox_2;
     QPushButton *Btn_Motor_CCW;
     QPushButton *Btn_Motor_CW;
@@ -255,22 +258,10 @@ public:
         label_9 = new QLabel(groupBox);
         label_9->setObjectName(QString::fromUtf8("label_9"));
         label_9->setGeometry(QRect(290, 30, 41, 22));
-        SDA = new QLabel(groupBox);
-        SDA->setObjectName(QString::fromUtf8("SDA"));
-        SDA->setGeometry(QRect(140, 350, 20, 20));
-        SDA->setStyleSheet(QString::fromUtf8("border-radius: 10px;\n"
-"border:3px groove gray;\n"
-"border-style:outset;"));
         led_Delivery = new QLabel(groupBox);
         led_Delivery->setObjectName(QString::fromUtf8("led_Delivery"));
         led_Delivery->setGeometry(QRect(280, 350, 20, 20));
         led_Delivery->setStyleSheet(QString::fromUtf8("border-radius: 10px;\n"
-"border:3px groove gray;\n"
-"border-style:outset;"));
-        SCL = new QLabel(groupBox);
-        SCL->setObjectName(QString::fromUtf8("SCL"));
-        SCL->setGeometry(QRect(98, 350, 20, 20));
-        SCL->setStyleSheet(QString::fromUtf8("border-radius: 10px;\n"
 "border:3px groove gray;\n"
 "border-style:outset;"));
         label_13 = new QLabel(groupBox);
@@ -309,6 +300,31 @@ public:
         label_11 = new QLabel(groupBox);
         label_11->setObjectName(QString::fromUtf8("label_11"));
         label_11->setGeometry(QRect(20, 380, 31, 20));
+        SDA = new QLabel(groupBox);
+        SDA->setObjectName(QString::fromUtf8("SDA"));
+        SDA->setGeometry(QRect(142, 350, 20, 20));
+        SDA->setStyleSheet(QString::fromUtf8("border-radius: 10px;\n"
+"border:3px groove gray;\n"
+"border-style:outset;"));
+        SCL = new QLabel(groupBox);
+        SCL->setObjectName(QString::fromUtf8("SCL"));
+        SCL->setGeometry(QRect(100, 350, 20, 20));
+        SCL->setStyleSheet(QString::fromUtf8("border-radius: 10px;\n"
+"border:3px groove gray;\n"
+"border-style:outset;"));
+        spinBox_LED = new QSpinBox(groupBox);
+        spinBox_LED->setObjectName(QString::fromUtf8("spinBox_LED"));
+        spinBox_LED->setGeometry(QRect(320, 304, 61, 32));
+        spinBox_LED->setMinimum(0);
+        spinBox_LED->setMaximum(9);
+        spinBox_LED->setSingleStep(1);
+        spinBox_LED->setValue(0);
+        Btn_SetLED = new QPushButton(groupBox);
+        Btn_SetLED->setObjectName(QString::fromUtf8("Btn_SetLED"));
+        Btn_SetLED->setGeometry(QRect(383, 305, 51, 30));
+        label_16 = new QLabel(groupBox);
+        label_16->setObjectName(QString::fromUtf8("label_16"));
+        label_16->setGeometry(QRect(324, 280, 61, 22));
         groupBox_2 = new QGroupBox(widget_Winch);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
         groupBox_2->setGeometry(QRect(20, 540, 271, 201));
@@ -422,9 +438,7 @@ public:
         BtnWinch_HOLD_LINE->setText(QCoreApplication::translate("MainWindow", "HOLD_LINE", nullptr));
         label_TIE_LEN->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         label_9->setText(QCoreApplication::translate("MainWindow", "LEN:", nullptr));
-        SDA->setText(QString());
         led_Delivery->setText(QString());
-        SCL->setText(QString());
         label_13->setText(QCoreApplication::translate("MainWindow", "SCL", nullptr));
         label_Delivery->setText(QCoreApplication::translate("MainWindow", "LOCK", nullptr));
         B_1->setText(QString());
@@ -434,6 +448,10 @@ public:
         label_14->setText(QCoreApplication::translate("MainWindow", "SDA", nullptr));
         label_UPandLOCK->setText(QCoreApplication::translate("MainWindow", "ZERO", nullptr));
         label_11->setText(QCoreApplication::translate("MainWindow", "D18", nullptr));
+        SDA->setText(QString());
+        SCL->setText(QString());
+        Btn_SetLED->setText(QCoreApplication::translate("MainWindow", "Set", nullptr));
+        label_16->setText(QCoreApplication::translate("MainWindow", "SetLED:", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("MainWindow", "SC15(20~1000)", nullptr));
         Btn_Motor_CCW->setText(QCoreApplication::translate("MainWindow", "CCW", nullptr));
         Btn_Motor_CW->setText(QCoreApplication::translate("MainWindow", "CW", nullptr));

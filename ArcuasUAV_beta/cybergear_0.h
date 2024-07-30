@@ -44,8 +44,7 @@ public:
     int   m_DataAutoDump;
     int   m_MotorStop;
 
-    int     m_echo;
-    float   m_line_length;
+    float   m_tie_length;
 
     void Init();
     void motor_can_tx(int mode, int data2);

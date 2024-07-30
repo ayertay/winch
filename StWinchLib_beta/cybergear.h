@@ -72,6 +72,8 @@ public:
     float Motor_GetPos();
     float Motor_GetTorque();
 
+    void  Led_Set(int idx_group, int clr);
+
 signals:
 
 };

@@ -40,6 +40,9 @@ extern int gLast_WinchZeroDetected;
 extern int g_WinchZeroDetected;
 extern int g_WinchLoadUPandLock;
 extern int g_WINCH_DELIVER;
+extern int g_led_clr;
+
+QSerialPort m_port485;
 
 CoreUAV::CoreUAV(QObject *parent) : QObject(parent)
 {
@@ -85,7 +88,7 @@ CoreUAV::~CoreUAV()
 
 int CoreUAV::init()
 {
-
+    OpenComPort(&m_port485, "/dev/ttyAMA5", QSerialPort::Baud115200, QSerialPort::Data8, QSerialPort::OneStop, QSerialPort::NoParity);
     QVariant v;
 
     //Get config information from config.ini
@@ -1327,6 +1330,7 @@ void CoreUAV::WINCH_RATE_CONTROL(float speed=10)
 
 void CoreUAV::WINCH_LOCK()
 {
+    mCyberGear.Led_Set(0, 9);
     WinchUnlock();
 
     g_WINCH_DELIVER = 0;
@@ -1345,7 +1349,12 @@ void CoreUAV::WINCH_LOCK()
 
     if(g_WinchZeroDetected==0)
     {
+        //mCyberGear.Led_Set(0, 8);
+        g_led_clr=-1;
+        mCyberGear.Led_Set(0, 9);
         WinchLock();
+        g_led_clr=-1;
+        mCyberGear.Led_Set(0, 9);
     }
 
     sleep(8);
@@ -1356,14 +1365,22 @@ void CoreUAV::WINCH_LOCK()
     mCyberGear.Motor_Stop();
     sleep(1);
     g_WinchLoadUPandLock=1;
+
+    mCyberGear.Led_Set(0, 3);
 }
 
 
 void CoreUAV::WINCH_DELIVER(float distance, float speed=10)
 {
+    mCyberGear.Led_Set(0, 9);
+
     //Delivery
     g_WINCH_DELIVER = 0;
     g_WinchLoadUPandLock = 0;
+    if(distance<0.1)
+    {
+        distance = mCyberGear.m_line_length;
+    }
 
     if(speed<1.0)
     {
@@ -1371,6 +1388,8 @@ void CoreUAV::WINCH_DELIVER(float distance, float speed=10)
     }
 
     WinchLoadUP();
+    g_led_clr=-1;
+    mCyberGear.Led_Set(0, 9);
 
     /*
     if( m_WinchLocked == 1 )
@@ -1410,10 +1429,13 @@ void CoreUAV::WINCH_DELIVER(float distance, float speed=10)
         dDuration = 1000000.0*(l_tv.tv_sec-l_tv_Begin.tv_sec) + (l_tv.tv_usec-l_tv_Begin.tv_usec);
         if(dDuration>5000000.0)
         {
+            mCyberGear.Led_Set(0, 7);
             return;
         }
     }
 
+    g_led_clr=-1;
+    mCyberGear.Led_Set(0, 9);
     WinchUnlock();
     sleep(8);
     mCyberGear.Motor_Move(2);
@@ -1439,11 +1461,12 @@ void CoreUAV::WINCH_DELIVER(float distance, float speed=10)
         dDuration = 1000000.0*(l_tv.tv_sec-l_tv_Begin.tv_sec) + (l_tv.tv_usec-l_tv_Begin.tv_usec);
         if(dDuration>((distance/speed)*2000000.0))
         {
+            mCyberGear.Led_Set(0, 7);
             return;
         }
     }
     g_WINCH_DELIVER = 1;
-
+    mCyberGear.Led_Set(0, 3);
 
  /*
     while(mCyberGear.Motor_GetPos()>0.5)

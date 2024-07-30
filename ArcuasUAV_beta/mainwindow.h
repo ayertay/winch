@@ -70,6 +70,8 @@ private slots:
 
     void on_BtnWinch_HOLD_LINE_clicked();
 
+    void on_Btn_SetLED_clicked();
+
 private:
     Ui::MainWindow *ui;
     CoreUAV mCore;

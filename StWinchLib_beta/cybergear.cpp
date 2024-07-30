@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QTime>
+#include <QSerialPort>
 
 #define MAIN_CAN_ID  254
 #define SYS_CAN_ID   253
@@ -31,6 +32,8 @@ int gLast_WinchZeroDetected = -1;
 int g_WinchZeroDetected = 1;
 int g_WinchLoadUPandLock=0;
 int g_WINCH_DELIVER=0;
+
+extern QSerialPort m_port485;
 
 CyberGear::CyberGear(QObject *parent)
     : QObject{parent}
@@ -303,11 +306,14 @@ int CyberGear::motor_can_rx()
                         Motor_Enable();sleep(0.05);
                         Motor_Speed(20);sleep(0.05);
                         m_MotorStop = 1;
+
+                        Led_Set(0,3);
                     }
                     break;
                 }
                 case MOTOR_MODE::MODE_NORM:
                 {
+                    //Led_Set(0,3);
                     m_MotorStop = 0;
                     break;
                 }
@@ -322,6 +328,8 @@ int CyberGear::motor_can_rx()
                         m_MotorMode = MODE_NORM;
                         Motor_SetZero();
                         Motor_Enable();
+
+                        Led_Set(0,9);
                     }
                     break;
                 }
@@ -373,6 +381,7 @@ int CyberGear::motor_can_rx()
                         }
                     }
 
+                    Led_Set(0,9);
 
                     break;
                 }
@@ -445,6 +454,7 @@ int CyberGear::motor_can_rx()
                         */
                     }
 
+                    Led_Set(0,9);
                     break;
                 }
             }
@@ -801,4 +811,16 @@ void CyberGear::Motor_Mode(int mode)
 int CyberGear::Motor_Read_Mode()
 {
     return m_MotorMode;
+}
+
+int g_led_clr=-1;
+void CyberGear::Led_Set(int idx_group, int clr)
+{
+    if(g_led_clr==clr)
+        return;
+    unsigned char data[1]={0x00};
+    data[0] = clr;
+    m_port485.write((char*)data, 1);
+    m_port485.flush();
+    g_led_clr=clr;
 }

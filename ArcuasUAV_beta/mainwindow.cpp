@@ -290,7 +290,7 @@ void MainWindow::ON_ShowCurrentIO(int io_idx,int v)
 
 void MainWindow::ON_ShowPWM()
 {
-    ui->label_TIE_LEN->setText(QString::number(mCore.mCyberGear.m_tie_length, 'f', 4));
+    ui->label_TIE_LEN->setText(QString::number(mCore.mCyberGear.m_line_length, 'f', 4));
 }
 
 void MainWindow::on_BtnWinch_LOCK_clicked()
@@ -323,5 +323,12 @@ void MainWindow::on_BtnWinch_HOLD_clicked()
 void MainWindow::on_BtnWinch_HOLD_LINE_clicked()
 {
     mCore.WINCH_LOAD_LINE();
+}
+
+
+void MainWindow::on_Btn_SetLED_clicked()
+{
+    int iLed = ui->spinBox_LED->text().toInt();
+    mCore.Led_Set(0, iLed);
 }
 
