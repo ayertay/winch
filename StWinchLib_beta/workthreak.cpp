@@ -39,11 +39,12 @@ void WorkThread::SetCyberGearObject(CyberGear* p)
 void WorkThread::run()
 {
     //LedProcessing();
+    qDebug()<<"\n =============== WorkThread start!!!==============="<<endl;
     while(true)
     {      
         //can data read from winch.
-        pCyberGear->motor_can_rx();
         QThread::msleep(20);
+        pCyberGear->motor_can_rx();
 
         workCount++;
         if(workCount>=10)

@@ -60,11 +60,17 @@ void PWMThread::CheckPWM()
     emit signal_ShowCurrentIO(IO_BTN2, val2);
     */
 
+    //gpiod_line_request_input(gpioline_BTN1, "gpio");
+    //gpiod_line_request_input(gpioline_BTN3, "gpio");
+    //gpiod_line_request_input(gpioline_BTN4, "gpio");
     //check IO button
     g_io_18=gpiod_line_get_value(gpioline_BTN1);
-//    g_io_22=gpiod_line_get_value(gpioline_BTN2);
     g_io_SCL=gpiod_line_get_value(gpioline_BTN3);
     g_io_SDA=gpiod_line_get_value(gpioline_BTN4);
+    //
+    //gpiod_line_release(gpioline_BTN1);
+    //gpiod_line_release(gpioline_BTN3);
+    //gpiod_line_release(gpioline_BTN4);
 
     /*
     if(gLast_io_18!=g_io_18)
@@ -123,6 +129,10 @@ void PWMThread::CheckPWM()
 void PWMThread::SetPWM(int pwmVal)
 {
     t_outPWM_val = pwmVal;
+
+    gpiod_line_request_output(gpioline_BTN2, "gpio", 0);
+    QThread::sleep(3);
+    gpiod_line_release(gpioline_BTN2);
 }
 
 long long t = 0;

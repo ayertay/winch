@@ -124,8 +124,20 @@ double GetAverage(double f)
 
 static struct can_frame frameRx;
 //struct msghdr frameRx;
+static long   g_DelayStart_Cnt = 0;
 int CyberGear::motor_can_rx()
 {
+    if(m_DataAutoDump==0)
+    {
+        if(g_DelayStart_Cnt>=100)
+        {
+            Motor_DataAutoDump(1);
+            g_DelayStart_Cnt = 0;
+        }
+
+        g_DelayStart_Cnt++;
+    }
+
     //frame.can_id = CAN_EFF_FLAG | (mode<<24) | (data2<<8) | motor_ID;
     //frame.can_dlc = 8;
 

@@ -50,7 +50,7 @@ print("add = " + str(result))
 
 result2 = lib.WinchCoreRun(3)
 lib.WINCH_CAN_ECHO(0)
-sleep(3)
+sleep(5)
 
 #lib.WINCH_LATCH_UNLOCK()
 #print("WINCH_LATCH_UNLOCK")
@@ -64,44 +64,23 @@ sleep(3)
 #print("WINCH_RELAXED")
 #sleep(5)
 
-f_line_len = lib.WINCH_LINE_LENGTH()
-print("WINCH_LINE_LENGTH = " + str(f_line_len) + "  rad")
-sleep(5)
-lib.WINCH_CAN_ECHO(1)
+#f_line_len = lib.WINCH_LINE_LENGTH()
+#print("WINCH_LINE_LENGTH = " + str(f_line_len) + "  rad")
+#sleep(5)
+#lib.WINCH_CAN_ECHO(1)
 
-while True:
-	sleep(1)
-    
-	lib.WINCH_LOCK()
-	sleep(2)
-	print("LOCK finish")
-	sleep(10)
+print("WINCH_DELIVER start!")
+lib.WINCH_DELIVER(0, 30.0)
+print("DELIVER,RETRACT----WINCH come back!")
+
+fpos = lib.WinchGetPos();
+while fpos>2.0:
 	fpos = lib.WinchGetPos();
-	while fpos>2.0:
-		fpos = lib.WinchGetPos();
-		fTorque = lib.WinchGetTorque();
-		sleep(0.5)
-		print("pos=" + str(fpos) + "    torque=" + str(fTorque))
-	print("LOCK----WINCH come back!")	
-		
-	lib.WINCH_DELIVER(0, 10.0)
-	print("WINCH_DELIVER")
-	sleep(10)
-#	sleep(60)
-	fpos = lib.WinchGetPos();
-#	pwm_duty = lib.WinchGetPWMDuty();
-#	pwm_period = lib.WinchGetPWMPeriod();
-	
-#	spos = round(fpos, 4);
-#	sPWMDuty = round(pwm_duty, 3);	
-#	sPWMPeriod = round(pwm_period, 3);
-	
-#	print("pos=" + str(fpos) + "    PWM_Duty=" + str(pwm_duty) + "%   PWM_Period=" + str(pwm_period)+"Hz")
-	while fpos>2.0:
-		fpos = lib.WinchGetPos();
-		fTorque = lib.WinchGetTorque();
-		sleep(0.5)
-		print("pos=" + str(fpos) + "    torque=" + str(fTorque))
-	print("DELIVER,RETRACT----WINCH come back!")
-		
-	sleep(10)
+	fTorque = lib.WinchGetTorque();
+	sleep(0.5)
+	print("pos=" + str(fpos) + "    torque=" + str(fTorque))
+print("check pos less than 2.0 rad!")
+
+sleep(3)
+lib.WINCH_RELAXED()
+print("WINCH_RELAXED")

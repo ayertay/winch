@@ -59,7 +59,7 @@ CoreUAV::CoreUAV(QObject *parent) : QObject(parent)
     p_taskWork->SetDroneId(G_PLAN_ID);
 
     //Careate  mptt
-    p_myMqtt = new myMqtt;
+    //p_myMqtt = new myMqtt;
 
     //config file init
     QString path=QStringLiteral("/home/uav/APP/UAV_run/config.ini");
@@ -88,7 +88,6 @@ CoreUAV::~CoreUAV()
 
 int CoreUAV::init()
 {
-    OpenComPort(&m_port485, "/dev/ttyAMA5", QSerialPort::Baud115200, QSerialPort::Data8, QSerialPort::OneStop, QSerialPort::NoParity);
     QVariant v;
 
     //Get config information from config.ini
@@ -147,7 +146,7 @@ int CoreUAV::init()
     CreateLog();
 
 #ifndef  USE_TO_LIB
-    connect(p_myMqtt,SIGNAL(signal_SubMsg(QString,QString)),this,SLOT(On_SubMsg(QString,QString)));
+    //connect(p_myMqtt,SIGNAL(signal_SubMsg(QString,QString)),this,SLOT(On_SubMsg(QString,QString)));
     connect(p_taskWork,SIGNAL(signal_WINCH_DELIVER(float,float)),this,SLOT(WINCH_DELIVER(float,float)));
     connect(p_taskWork, SIGNAL(signal_WinchLoadUPandLock()), this, SLOT(WinchLoadUPandLock()));
     connect(p_taskWork, SIGNAL(signal_WINCH_LOCK()), this, SLOT(WINCH_LOCK()));
@@ -162,6 +161,7 @@ int CoreUAV::init()
     //Open Hook Port
     //mHook.Init("/dev/ttyUSB1", HOOK_LORA_ADDR);
 
+    delay(0.2);
     //CyberGear can init
     mCyberGear.Motor_Init(g_WINCH_ID);delay(0.1);
     mCyberGear.Motor_SetZero();delay(0.1);
@@ -170,10 +170,10 @@ int CoreUAV::init()
     mCyberGear.Motor_Enable();delay(0.1);
     mCyberGear.m_line_length = g_WINCH_TIE_LEN;
     //mCyberGear.Motor_limit_cur(0.5);delay(0.1);  
-    delay(0.2);
+    //delay(0.2);
     //mCyberGear.Motor_DataAutoDump(1);
     //WinchDataDump(1);
-    //delay(0.5);
+    delay(0.5);
     p_taskWork->SetCyberGearObject(&mCyberGear);
 
     //Led_Init();
@@ -181,6 +181,19 @@ int CoreUAV::init()
     if(0==GPIO_Init())
     {
         qDebug() << "GPIO INIT FAILED!";
+    }
+    else
+    {
+        qDebug() << "GPIO INIT SUCESSED!";
+    }
+
+    if( OpenComPort(&m_port485, "/dev/ttyAMA5", QSerialPort::Baud115200, QSerialPort::Data8, QSerialPort::OneStop, QSerialPort::NoParity))
+    {
+        qDebug() << "LED ctrl port open sucessed!";
+    }
+    else
+    {
+        qDebug() << "LED ctrl port open fail!";
     }
 
     return 0;
@@ -200,22 +213,21 @@ int CoreUAV::run()
 {
     int ret=0;
 
+ /*
     //mqtt init
     p_myMqtt->setObjectName("sin_UAV_SC"+G_PLAN_ID);
     p_myMqtt->setClientHost(g_sSERVER_IP);
     p_myMqtt->setClientPort(g_SERVER_PORT);
     p_myMqtt->setClientUserName("arcuas");
     p_myMqtt->setClientPassword("arcuas");
-//    p_myMqtt->setClientUserName("admin");
-//    p_myMqtt->setClientPassword("SINTEKadsb123");
     p_myMqtt->connected();
     delay(200);
-
+*/
 
     {
         {
-            QThread::sleep(2);
-
+            //QThread::sleep(2);
+            sleep(0.5);
             //qDebug()<<"work线程测试开始:";
             //p_taskWork->SetWinchReady(bWinchPortRet);
             p_taskWork->start();
@@ -430,10 +442,12 @@ int CoreUAV::PostUAVStatus(char* sStatus, int len)
 
 int CoreUAV::TxToHttpServer(QString pub, QString msg)
 {
+    /*
     if(p_myMqtt->IsConneted())
     {
         p_myMqtt->setPublish(pub, msg, 2);
     }
+    */
 
     return 0;
 }
@@ -606,46 +620,6 @@ void CoreUAV::time_update()
     }
 
  /*
-    //check IO button
-    int val1=0;
-    int val2=0;
-    val1=gpiod_line_get_value(gpioline_BTN1);
-    val2=gpiod_line_get_value(gpioline_BTN2);
-    emit signal_ShowCurrentIO(IO_BTN1, val1);
-    emit signal_ShowCurrentIO(IO_BTN2, val2);
-*/
-
-    /*
-    g_Current_WinchPos = mCyberGear.Motor_GetPos();
-    g_Current_WinchTorque = mCyberGear.Motor_GetPos();
-    emit signal_ShowCurrentWinchPos();
-    */
-
-    //mCyberGear.Motor_Read_mechPos();
-    //delay(100);
-    //mCyberGear.motor_can_rx();
-/*
-    //SC Auto Test
-    emit signal_ShowCurrentSCPos();
-    if(bEnableSCTest)
-    {
-        emit signal_SC_AutoTest();
-    }
-
-    if(g_LedInited!=0)
-    {
-        g_LedInited = Led_Init();
-        if(g_LedInited==0)
-        {
-            delay(200);
-            Led_Set(1, 3);
-            delay(200);
-            Led_Set(2, 3);
-            Led_SetFlash(5);
-            Led_ON(true);
-        }
-    }
-*/
     if(!p_myMqtt->IsConneted() )
     {
         //断线重连
@@ -682,8 +656,6 @@ void CoreUAV::time_update()
                 sLog += "2-SC fail!";
             }
 
-
-/*
             b=p_myMqtt->setSubscribe(MQTT_SUB_CTRL);
             g_sub = b;
             if( b )
@@ -760,7 +732,7 @@ void CoreUAV::time_update()
             {
                 sLog += "7-STATUSTIMEs fail!";
             }
-*/
+
             WriteToLog( sLog );  //===log===s
 
         }
@@ -792,49 +764,7 @@ void CoreUAV::time_update()
     m_time.setHMS(0, 0, 0, 0);                                       //初始化数据，时 分 秒 毫秒
     s_run_time =m_time.addSecs(beginTime.secsTo(current_date_time)).toString("hh:mm:ss");//计算时间差(秒)，将时间差加入m_time，格式化输出
     //ui->run_time->setText(s_run_time);
-
-    iMsgCnt++;
-    if(iMsgCnt==5)
-    {
-        if(p_myMqtt->IsConneted())
-        {
-        //    QString str;
-        //    str=QString(QLatin1String(sStatus));
-            //str="123456";
-            //p_myMqtt->setPublish(MQTT_PUB_STATUS, str, 2);
-
-
-            /*
-            QString sLon,sLat,sVolt,sCurr,sTemp,sHumidty;
-
-
-            sLon = QString::number(g_lon,10,7);
-            sLat = QString::number(g_lat,10,7);
-
-            sVolt = QString::number(g_Volt,10,3);
-            sCurr = QString::number(g_Curr,10,3);
-
-            sTemp = QString::number(g_Temp,10,3);
-            sHumidty = QString::number(g_Humidty,10,3);
-            //msg_status = "{'lon':'"+sLon+"','lat:':'"+sLat+"','volt:':'"+sVolt+"','curr:':'"+sCurr+"','temp:':'"+sTemp+"','humidty:':'"+sHumidty+"'}";
-            //发布消息
-            QJsonObject m_json;
-            m_json.insert("lon",sLon);
-            m_json.insert("lat",sLat);
-            m_json.insert("volt",sVolt);
-            m_json.insert("curr",sCurr);
-            m_json.insert("temp",sTemp);
-            m_json.insert("humidty",sHumidty);
-
-            QJsonDocument m_jsondoc;
-            m_jsondoc.setObject(m_json);
-            //QByteArray d=m_jsondoc.toJson();
-            p_myMqtt->setPublish(MQTT_PUB_STATUS, m_jsondoc.toJson(), 0);
-            */
-        }
-        iMsgCnt=0;
-    }
-
+*/
 }
 
 QString sTemp="";
@@ -872,7 +802,7 @@ void CoreUAV::On_SubMsg(QString sTopic, QString message)
         TxToHttpServer(MQTT_PUB_STATUS, sLog);
         WriteToLog( sLog );  //===log===
     }
-*/
+
     if(sTopic==MQTT_SUB_SC)
     {
         if(message.left(3)=="POS")
@@ -1084,7 +1014,7 @@ void CoreUAV::On_SubMsg(QString sTopic, QString message)
             emit signal_AddLogInEdit(QString(message+"\n"));
         }
     }
-
+*/
 }
 
 

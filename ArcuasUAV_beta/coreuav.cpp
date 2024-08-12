@@ -10,6 +10,9 @@
 #include "global.h"
 #include <sys/time.h>
 
+QString sPort232 = "/dev/ttyAMA3";
+QString sPort485 = "/dev/ttyAMA5";
+
 QSerialPort m_port485;
 
 struct gpiod_chip *gpiochip;
@@ -86,10 +89,9 @@ CoreUAV::~CoreUAV()
     p_pwmThread->terminate();
 }
 
-
 int CoreUAV::init()
 {
-    OpenComPort(&m_port485, "/dev/ttyAMA5", QSerialPort::Baud115200, QSerialPort::Data8, QSerialPort::OneStop, QSerialPort::NoParity);
+    OpenComPort(&m_port485, sPort485, QSerialPort::Baud115200, QSerialPort::Data8, QSerialPort::OneStop, QSerialPort::NoParity);
     QVariant v;
 
     //Get config information from config.ini
@@ -475,7 +477,8 @@ int CoreUAV::GPIO_Init()
         return 0;
     if (gpioline_BTN4 == NULL)
         return 0;
-    //ret = gpiod_line_request_output(gpioline, "gpio", 0);
+/*
+
     ret = gpiod_line_request_input(gpioline_BTN1, "gpio");
     if (ret != 0)
         return 0;
@@ -492,7 +495,11 @@ int CoreUAV::GPIO_Init()
     if (ret != 0)
         return 0;
     delay(200);
-    //gpiod_line_set_value
+*/
+    gpiod_line_request_input(gpioline_BTN1, "gpio");
+    gpiod_line_request_input(gpioline_BTN3, "gpio");
+    gpiod_line_request_input(gpioline_BTN4, "gpio");
+
  //error2:
  //        gpiod_chip_close(gpiochip);
  //error1:
@@ -505,6 +512,8 @@ void CoreUAV::GPIO_Releae()
 {
     gpiod_line_release(gpioline_BTN1);
     gpiod_line_release(gpioline_BTN2);
+    gpiod_line_release(gpioline_BTN3);
+    gpiod_line_release(gpioline_BTN4);
     gpiod_chip_close(gpiochip);;
 }
 

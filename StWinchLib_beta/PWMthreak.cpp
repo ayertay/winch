@@ -154,6 +154,7 @@ void PWMThread::MakePWM()
 
 void PWMThread::run()
 {
+    qDebug()<<"\n =============== PWMThread start!!!==============="<<endl;
     while(true)
     {      
         CheckPWM();
@@ -166,5 +167,5 @@ void PWMThread::run()
 
     }
 
-    qDebug()<<"\n =============== PWMThread end!!!==============="<<workCount<<endl;
+    qDebug()<<"\n =============== PWMThread end!!!==============="<<endl;
 }
